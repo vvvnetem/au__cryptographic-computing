@@ -55,7 +55,51 @@
 
 \section{Theoretical Assignment}
 
+\subsection{Card-based secure two party protocol}
 
+4 ordinary cards with identical backs, fronts are either red (R) or blue (B).
+
+Each player encodes their bit using two cards placed face-down in a row (left→right) private to them:
+
+\begin{itemize}
+    \item To encode bit 0, place the pair RB (from left top right).
+    \item To encode bit 1, place the pair BR (from left top right).
+\end{itemize}
+    
+So each player uses two cards; after both have placed, there are 4 face-down cards in a row: Alice’s two, then Bob’s two.
+
+
+Protocol steps:
+
+    \begin{itemize}
+        \item Alice privately places two face-down cards on the table in order according to her bit (0 → RB, 1 → BR).
+        \item Bob privately places his two face-down cards immediately to the right of Alice’s (again 0 → RB, 1 → BR)
+        \item Now the row is four face-down cards: positions 1..4 (Alice1, Alice2, Bob1, Bob2).
+        \item Reveal the two middle cards (positions 2 and 3 of the row) face up (leave positions 1 and 4 face-down).
+    \end{itemize}
+    
+If the two revealed middle cards are RB from left to right, output 0. Otherwise (any other revealed pair: BR or RR or BB) output 1. 
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|c|c||c|c|c|c||c|}
+         \hline\hline
+       \textit{Alice}  & \textit{Bob} & \textbf{A1} & \textbf{A2} & \textbf{B1} & \textbf{B2} & Output \\
+         \hline 
+       1  &1 & R & B & R &B &1 \\
+         \hline 
+       1  & 0 &R & B  & B& R &1 \\
+         \hline 
+       0  & 1 &B & R& R &B &1 \\
+         \hline 
+       0   & 0 &B &R &B &R &0 \\
+        \hline
+    \end{tabular}
+    \caption{4-card protocol}
+    \label{tab:4cardproto}
+\end{table}
+
+\subsection{Blood type compatibility}
 
 %Submit description of the function $f$ as a truth table and as a Boolean formula.
 
@@ -64,7 +108,7 @@ We will use the following secure two-party computation scenario as a running exa
 \textit{Alice} has blood type $x$, Bob has blood type $y$. We want Alice to learn $z=f(x,y)$, where $f$ is the function that outputs $1$ if a person with blood type $x$ can receive a blood transfusion from a person with blood type $y$ (and $0$ otherwise). Bob should learn nothing.
 
 %% TTP
-\subsection{Description of the function $f$ as a truth table}
+\subsubsection{Description of the function $f$ as a truth table}
 
 The compatibility matrix (truth table)\cite{au.mpc.a1.bloodtype} between the $8$ blood types can be represented in \textit{Table \ref{tab:bloodtypetruth}} as follows:
 
@@ -156,7 +200,7 @@ f =\ & (R_{O-} \land~~\ D_{O-}) \\
 \end{aligned}
 \]
 
-\subsection*{ Compatibility matrix using 3-bit representation }
+\subsubsection*{ Compatibility matrix using 3-bit representation }
 
 In case we are using one bit to represent modifier $+,-$ (1 if it represents $+$, and $-$ if it represents $0$)  we can further reformulate our \textit{Table \ref{tab:bloodtypetruth}}, leading us with a more easier approach to simply our boolean function representation of $f$. 
 
@@ -191,7 +235,7 @@ AB$+$ & 111 \\
 
 Under this encoding the eight types represented as the following \textit{Table \ref{tab:3bitreprz}}: 
 
-\subsection*{Simplified boolean formula $f$}
+\subsubsection*{Simplified boolean formula $f$}
 \begin{itemize}
     \item Let recipient bits be $(x_A, x_B, x_R)$ and donor bits be $(y_A, y_B, y_R)$
     \item  A recipient of type $x$ can receive from a donor of type $y$ exactly when the donor does not have any antigen that the recipient lacks (for A and B) and the donor is not $Rh+$ while the recipient is $Rh-$
@@ -203,7 +247,7 @@ Thus, written with boolean operators we can express $f$ as follows:
     f(x,y) = (x_A \lor \neg y_A) \land (x_B \lor \neg y_B) \land (x_R \lor \neg y_R)
 \end{equation}
 
-\subsection*{Quick checks}
+\subsubsection*{Quick checks}
 
 Finally we are able to check our formalization. (Please note, the $_{*}$ used as a placeholder for modifier $+,-$)
 
