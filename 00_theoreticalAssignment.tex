@@ -1,0 +1,223 @@
+\documentclass{article}
+%\usepackage[a4paper, total={12cm, 12cm}]{geometry}
+\usepackage{graphicx} % Required for inserting images
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{url}
+
+\usepackage{biblatex}
+\usepackage{adjustbox}
+\addbibresource{forrasok.bib} %Import the bibliography file
+
+% =============================================================
+% User Specific Macros
+% --------------------
+
+%% Karnaught-tábla
+\newcommand{\igaz}{\textit{t}}
+\newcommand{\hamis}{\textit{h}}
+
+%% Logikai muveletek
+\newcommand{\cland}[2]{{#1} \land {#2}%
+}
+\newcommand{\clor}[2]{{#1} \lor {#2}%
+}
+\newcommand{\csup}[2]{{#1} \supset {#2}%
+}
+\newcommand{\csub}[2]{{#1} \subset {#2}%
+}
+% log. eqivalencia
+\newcommand{\cleqv}[2]{{#1} \leftrightarrow {#2}%
+}
+\newcommand{\cneg}[2]{{#1} \neg {#2}%
+}
+
+%
+\newcommand{\AND}{\mathrm{AND}}
+\newcommand{\OR}{\mathrm{OR}}
+\newcommand{\NAND}{\mathrm{NAND}}
+\newcommand{\XOR}{\mathrm{XOR}}
+\newcommand{\NOT}{\mathrm{NOT}}
+
+% =============================================================
+
+\title{Aarhus University \\ Cryptographic Computing \\ Theoretical Assignments }
+\author{ Fanni Zsanett Ferenczi, \\ Miklos Daniel Vadasz}
+\date{August 2025}
+
+\begin{document}
+
+\maketitle
+
+%\include{info.tex}
+
+
+
+\section{Theoretical Assignment}
+
+
+
+%Submit description of the function $f$ as a truth table and as a Boolean formula.
+
+We will use the following secure two-party computation scenario as a running example for all the assignments: 
+
+\textit{Alice} has blood type $x$, Bob has blood type $y$. We want Alice to learn $z=f(x,y)$, where $f$ is the function that outputs $1$ if a person with blood type $x$ can receive a blood transfusion from a person with blood type $y$ (and $0$ otherwise). Bob should learn nothing.
+
+%% TTP
+\subsection{Description of the function $f$ as a truth table}
+
+The compatibility matrix (truth table)\cite{au.mpc.a1.bloodtype} between the $8$ blood types can be represented in \textit{Table \ref{tab:bloodtypetruth}} as follows:
+
+% Table head: donor, column := recipient
+% O- := Universal Donor
+% AB+ := Universal recipient 
+
+% x := recipient
+% y := donor
+
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|l|c|c|c|c|c|c|c|c|}
+    \hline
+    \textit{Donor:} & $0-$ & $0+$ & $A-$ & $A+$ & $ B-$ & $B+$ & $AB-$ & $AB+$  \\
+      \hline\hline
+    \textit{Receiver:} $0-$  & 1 & 0 & 0 &  0 & 0 & 0 & 0  &  0 \\
+      \hline
+    \textit{Receiver:}  $0+$  & 1 & 1 & 0 & 0 &  0 & 0 & 0   & 0  \\
+      \hline
+    \textit{Receiver:}  $A-$ &1  & 0 & 1 &  0 & 0 & 0  &  0 &  0 \\
+      \hline
+    \textit{Receiver:}  $A+$ & 1 & 1 & 1 & 1 & 0 &  0 & 0  & 0  \\
+      \hline
+     \textit{Receiver:}  $ B-$ &  1& 0 & 0 & 0 &  1 &  0 & 0 &  0 \\
+      \hline
+      \textit{Receiver:} $B+$ & 1 & 1 & 0 & 0 & 1 &1 & 0  & 0  \\
+      \hline
+     \textit{Receiver:}  $AB-$ & 1  & 0 &1 & 0 &1 & 0 & 1 &  0 \\
+      \hline
+     \textit{Receiver:} $AB+$  &1 & 1 &  1 & 1 & 1 & 1 & 1 &  1 \\
+      \hline
+    \end{tabular}
+    \caption{Blood type compatibility Matrix (truth table)}
+    \label{tab:bloodtypetruth}
+\end{table}
+
+\subsection{Description of $f$ as Boolean Formula}
+
+In the second case, we can also represent $f$ with the aid of boolean operators (AND, OR, XOR, NOT, etc.). 
+
+For easier readability let $F_i$  represents $i$-th row vector of \textit{Table \ref{tab:bloodtypetruth}}.
+
+Thus it yields us with the following representation: 
+
+\begin{table}[h!]
+    \centering
+$
+\begin{array}{c||l}
+\hline
+F_1 & O{-} \\
+\hline
+F_2 & O{-} \lor~~\  O{+} \\
+\hline
+F_3 & O{-} \lor~~\  A{-} \\
+\hline
+F_4 & O{-} \lor~~\  O{+} \lor~~\  A{-} \lor~~\  A{+} \\
+\hline
+F_5 & O{-} \lor~~\  B{-} \\
+\hline
+F_6 & O{-} \lor~~\  O{+} \lor~~\  B{-} \lor~~\  B{+} \\
+\hline
+F_7 & O{-} \lor~~\  A{-} \lor~~\  B{-} \lor~~\  AB{-} \\
+\hline
+F_8 & O{-} \lor~~\  O{+} \lor~~\  A{-} \lor~~\  A{+} \lor~~\  B{-} \lor~~\  B{+} \lor~~\  AB{-} \lor~~\  AB{+} \\
+\hline
+\end{array}
+$    
+    \caption{Rewriting the blood type \textit{Truth Table} with boolean operators}
+    \label{tab:secondpoz}
+\end{table}
+
+
+Furthermore we can simplify our notation using $R_{\_}$ denoting the \textit{Receiver} and $D_{\_}$ as \textit{Donor}. The underscore ($\_$) denotes the placeholder for given blood type based on notation used within \textit{Table \ref{tab:bloodtypetruth}, \ref{tab:secondpoz}}.
+
+
+%% 1st assignment 3 bit represantation alaphoz>
+\[
+\begin{aligned}
+f =\ & (R_{O-} \land~~\ D_{O-}) \\
+\lor~~\ & (R_{O+} \land~~\ (D_{O-} \lor~~\ D_{O+})) \\
+\lor~~\ & (R_{A-} \land~~\ (D_{O-} \lor~~\ D_{A-})) \\
+\lor~~\ & (R_{A+} \land~~\ (D_{O-} \lor~~\ D_{O+} \lor~~\ D_{A-} \lor~~\ D_{A+})) \\
+\lor~~\ & (R_{B-} \land~~\ (D_{O-} \lor~~\ D_{B-})) \\
+\lor~~\ & (R_{B+} \land~~\ (D_{O-} \lor~~\ D_{O+} \lor~~\ D_{B-} \lor~~\ D_{B+})) \\
+\lor~~\ & (R_{AB-} \land~~\ (D_{O-} \lor~~\ D_{A-} \lor~~\ D_{B-} \lor~~\ D_{AB-})) \\
+\lor~~\ & (R_{AB+} \land~~\ (D_{O-} \lor~~\ D_{O+} \lor~~\ D_{A-} \lor~~\ D_{A+} \lor~~\ D_{B-} \lor~~\ D_{B+} \lor~~\ D_{AB-} \lor~~\ D_{AB+}))
+\end{aligned}
+\]
+
+\subsection*{ Compatibility matrix using 3-bit representation }
+
+In case we are using one bit to represent modifier $+,-$ (1 if it represents $+$, and $-$ if it represents $0$)  we can further reformulate our \textit{Table \ref{tab:bloodtypetruth}}, leading us with a more easier approach to simply our boolean function representation of $f$. 
+
+With encoding (3 bits per type) given the expression:  for any blood type $t$ let its 3-bit encoding be $t \rightarrow{ (a,b,r)}$ where: 
+\begin{itemize}
+    \item  $a = 1$ if the blood has the A antigen\cite{au.mpc.a1.bloodtype.theory} (types A or AB), otherwise $a = 0$,
+    \item $b = 1$ if the blood has the B antigen\cite{au.mpc.a1.bloodtype.theory} (types B or AB), otherwise $b = 0$,
+    \item $r = 1$ if Rh-positive ($+$), otherwise $r = 0$ for Rh-negative ( $-$ ).
+\end{itemize}
+
+\begin{center}
+\begin{table}[!h]
+\centering
+\begin{tabular}{|c||c|}
+\hline
+\textbf{Blood Type} & \textbf{Binary representation: $A|B|\mathrm{\{+,-\}}$ } \\
+\hline\hline 
+O$-$ & 000  \\
+O$+$ & 001  \\
+A$-$ & 100 \\
+A$+$ & 101 \\
+B$-$ & 010 \\
+B$+$ & 011  \\
+AB$-$ & 110  \\
+AB$+$ & 111 \\
+\hline
+\end{tabular}
+\caption{Blood Type representation with 3-bit encoding scheme}
+\label{tab:3bitreprz}
+\end{table}
+\end{center}
+
+Under this encoding the eight types represented as the following \textit{Table \ref{tab:3bitreprz}}: 
+
+\subsection*{Simplified boolean formula $f$}
+\begin{itemize}
+    \item Let recipient bits be $(x_A, x_B, x_R)$ and donor bits be $(y_A, y_B, y_R)$
+    \item  A recipient of type $x$ can receive from a donor of type $y$ exactly when the donor does not have any antigen that the recipient lacks (for A and B) and the donor is not $Rh+$ while the recipient is $Rh-$
+\end{itemize}
+    
+Thus, written with boolean operators we can express $f$ as follows:
+
+\begin{equation}
+    f(x,y) = (x_A \lor \neg y_A) \land (x_B \lor \neg y_B) \land (x_R \lor \neg y_R)
+\end{equation}
+
+\subsection*{Quick checks}
+
+Finally we are able to check our formalization. (Please note, the $_{*}$ used as a placeholder for modifier $+,-$)
+
+\begin{itemize}
+    \item  Donor O- (0,0,0) to any recipient: every $\neg y_{*}$ is true, so $f = 1$ 
+    \item  Recipient AB+ (1,1,1) from any donor: every $x_{*}$  is 1, so $f = 1$
+    \item  Recipient A+ (1, 0, 1) from donor O+ (0, 0, 1): $f = 1$, as expected 
+    \item  Recipient A+ (1,0,1) from donor B+ (0,1,1): the second clause is 0, so $f = 0$ (incompatible), as expected
+\end{itemize}
+
+
+% Programming assignments .tex-be a leiras + formalizmus => git repo
+% Project proposal + final project  =>  Masik overleaf project
+
+%\include{prog.tex}
+\printbibliography
+\end{document}
