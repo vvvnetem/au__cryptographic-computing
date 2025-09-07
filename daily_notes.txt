@@ -1,0 +1,54 @@
+# Daily Notes 
+
+## 0905
+
+Functional_Encryption 	<- orai assignmentre alap
+SS10	<- Assignment-re alapoz: Garbled circuits
+
+[SS10]	Amit Sahai and Hakan Seyalioglu. Worry-free encryption: functional encryption with public keys. pages 463–472, 2010
+ 
+ABDP15	<- Assignment-re alapoz: OT
+
+[ABDP15]	Michel Abdalla, Florian Bourse, Angelo De Caro, and David Pointcheval. Simple functional encryption schemes for inner products. pages 733–751, 2015
+
+---
+
+Treshold_wallets
+
+[DOK20]	<- Assignment-re alapoz: BeDOZa protocol,
+		+ ECDSA
+
+Anders P. K. Dalskov, Claudio Orlandi, Marcel Keller, Kris Shrishak, and Haya Shulman. Securing DNSSEC keys via threshold ECDSA from generic MPC. pages 654–673, 2020
+
+----
+
+Treshold_Decryption_for_lattice-based_schemes
+
+[BD10] Rikke Bendlin and Ivan Damgård. Threshold decryption and zero-knowledge proofs for lattice-based cryptosystems. pages 201–218, 2010.
+
+[REG05]  Oded Regev. On lattices, learning with errors, random linear codes, and cryptography. pages 84–93, 2005
+----
+
+Distributed_Point_Functions
+
+[BGI16] Efficient 2-server private information retrieval
+Elette Boyle, Niv Gilboa, and Yuval Ishai. Function secret sharing: Improvements and extensions. pages 1292–1303, 2016.
+
+BCG+19	Reducing the size of the preprocessing in the one-time truth table protocol 
+
+Elette Boyle, Geoffroy Couteau, Niv Gilboa, Yuval Ishai, Lisa Kohl, and Peter Scholl. Efficient pseudorandom correlation generators: Silent OT extension and more. pages 489–518, 2019. 
+
+-----
+
+Honest_Majority_3-PC 
+
+MRZ15	Garbled circuits + OT 
+
+Payman Mohassel, Mike Rosulek, and Ye Zhang. Fast and secure three-party computation: The garbled circuit approach. pages 591–602, 2015.
+
+
+----
+
+Advanced Garbled Schemes [**]
+
+Samee Zahur, Mike Rosulek, and David Evans. Two halves make a whole - reducing data transfer in garbled circuits using half gates. pages 220–250, 2015. 2
