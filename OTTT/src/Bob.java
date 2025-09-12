@@ -1,7 +1,10 @@
 public class Bob {
+    private final static int n = 8;
     private int s;
     private int[][] Mb;
     private int bloodType;
+    private int u;
+    private int v;
 
     public Bob() {
     }
@@ -12,7 +15,16 @@ public class Bob {
         this.Mb = Mb;
     }
 
-    //todo: send, receive
+    public void receive(int u) {
+        this.u = u;
+    }
+
+    public int[] send() {
+        v = (bloodType + s) % n;
+        int zb = Mb[u][v];
+
+        return new int[]{v,zb};
+    }
 
 
 }

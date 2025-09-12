@@ -2,21 +2,23 @@ import java.util.Random;
 
 public class Dealer {
 
-    static int n = 8;
-    static int[][] T = {
-            {1,0,0,0,0,0,0,0},
-            {1,1,0,0,0,0,0,0},
-            {1,0,1,0,0,0,0,0},
-            {1,1,1,1,0,0,0,0},
-            {1,0,0,0,1,0,0,0},
-            {1,1,0,0,1,1,0,0},
+    private final static int n = 8;
+    private final static int[][] T = {
+            {1,1,1,1,1,1,1,1},
             {1,0,1,0,1,0,1,0},
-            {1,1,1,1,1,1,1,1}
+            {1,1,0,0,1,1,0,0},
+            {1,0,0,0,1,0,0,0},
+            {1,1,1,1,0,0,0,0},
+            {1,0,1,0,0,0,0,0},
+            {1,1,0,0,0,0,0,0},
+            {1,0,0,0,0,0,0,0},
+
     };
-    int[][] Ma;
-    int[][] Mb;
-    int r;
-    int s;
+
+    private int[][] Ma = new int[n][n];
+    private int[][] Mb = new int[n][n];
+    private int r;
+    private int s;
 
     public void Init() {
         Random rand = new Random();
@@ -34,10 +36,11 @@ public class Dealer {
         //Ma = MB[i, j] ⊕ T[i − r mod n, j − s mod n]
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                Ma[i][j] = Mb[i][j] ^ T[(i - r) % n][(j - s) % n];
+                int row = ((i - r) % n + n) % n; //to avoid negative indexes
+                int col = ((j - s) % n + n) % n;
+                Ma[i][j] = Mb[i][j] ^ T[row][col];
             }
         }
-
 
     }
     public int giveR() {
