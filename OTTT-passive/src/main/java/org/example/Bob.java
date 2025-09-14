@@ -1,3 +1,5 @@
+package org.example;
+
 public class Bob {
     private final static int n = 8;
     private int s;
@@ -25,6 +27,4 @@ public class Bob {
 
         return new int[]{v,zb};
     }
-
-
 }

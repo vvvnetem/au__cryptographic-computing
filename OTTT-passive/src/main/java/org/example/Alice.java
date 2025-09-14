@@ -1,4 +1,4 @@
-import java.util.Map;
+package org.example;
 
 public class Alice {
     private final static int n = 8;
@@ -31,7 +31,4 @@ public class Alice {
     public int output(){
         return zb ^ Ma[u][v];
     }
-
-
-
 }

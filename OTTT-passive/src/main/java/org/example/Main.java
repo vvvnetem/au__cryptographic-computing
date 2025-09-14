@@ -1,8 +1,9 @@
+package org.example;
+
 import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
-
         String[] bloodTypesAlice = {"AB+", "AB-", "A+", "A-", "B+", "B-", "O+", "O-"};
         String[] bloodTypesBob = {"O-", "O+", "B-", "B+", "A-", "A+", "AB-", "AB+"};
 

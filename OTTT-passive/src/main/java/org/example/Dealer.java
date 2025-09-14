@@ -1,8 +1,8 @@
+package org.example;
+
 import java.util.Random;
 
-public class Dealer {
-
-    private final static int n = 8;
+public class Dealer {private final static int n = 8;
     private final static int[][] T = {
             {1,1,1,1,1,1,1,1},
             {1,0,1,0,1,0,1,0},
