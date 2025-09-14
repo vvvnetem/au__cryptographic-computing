@@ -22,6 +22,7 @@ public class ProtocolTest {
     public void testAllBloodTypeCombinations() {
         for (int aliceType = 0; aliceType < 8; aliceType++) {
             for (int bobType = 0; bobType < 8; bobType++) {
+                System.out.printf("Testing Alice=%d, Bob=%d%n", aliceType, bobType);
 
                 Dealer dealer = new Dealer();
                 dealer.Init();

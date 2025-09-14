@@ -41,7 +41,7 @@ Bob cannot be a donor for Alice.
 ```
 
 ## Running Tests
-Again, you can use and IDE or Maven:
+Again, you can use an IDE or Maven:
 ```
 $ mvn test
 ```
@@ -49,6 +49,11 @@ This will run testAllBloodTypeCombinations in ProtocolTest.
 Example output:
 ```
 Running ProtocolTest
+Testing Alice=0, Bob=0
+Testing Alice=0, Bob=1
+Testing Alice=0, Bob=2
+...
+Testing Alice=7, Bob=7
 All blood type combinations passed successfully!
 ```
 
