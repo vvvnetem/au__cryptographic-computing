@@ -6,23 +6,21 @@ import java.util.Random;
 
 public class Dealer {
     private Random random;
-    private List<AndTriple> andTriples;
+    private List<AndTriple> aliceAndTriples;
+    private List<AndTriple> bobAndTriples;
 
     static class AndTriple {
-        // For Alice
-        int uA, vA, wA;
-        // For Bob
-        int uB, vB, wB;
+        int u, v, w;
 
-        AndTriple(int uA, int vA, int wA, int uB, int vB, int wB) {
-            this.uA = uA; this.vA = vA; this.wA = wA;
-            this.uB = uB; this.vB = vB; this.wB = wB;
+        AndTriple(int u, int v, int w) {
+            this.u = u; this.v = v; this.w = w;
         }
     }
 
     public void init() {
         random = new Random();
-        andTriples = new ArrayList<>();
+        aliceAndTriples = new ArrayList<>();
+        bobAndTriples = new ArrayList<>();
 
         // Generate AND triples for the circuit
         // Our formula needs 5 AND gates (3 for negations converted to AND, 2 for final ANDs)
@@ -30,7 +28,6 @@ public class Dealer {
             generateAndTriple();
         }
 
-        //andTriples.add(new AndTriple(1, 1, 0, 0, 1, 0));
     }
 
     private void generateAndTriple() {
@@ -49,14 +46,15 @@ public class Dealer {
         int wA = random.nextInt(2);
         int wB = w ^ wA;
 
-        andTriples.add(new AndTriple(uA, vA, wA, uB, vB, wB));
+        aliceAndTriples.add(new AndTriple(uA, vA, wA));
+        bobAndTriples.add(new AndTriple(uB, vB, wB));
     }
 
-    public AndTriple getTriple(int index) {
-        if (index < andTriples.size()) {
-            return andTriples.get(index);
-        }
-        return null;
+    public List<AndTriple> getAliceAndTriples() {
+        return aliceAndTriples;
     }
 
+    public List<AndTriple> getBobAndTriples() {
+        return bobAndTriples;
+    }
 }

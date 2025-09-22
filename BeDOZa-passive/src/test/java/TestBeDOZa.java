@@ -34,16 +34,13 @@ public class TestBeDOZa {
         int[] aliceBloodType = recipient;
         int[] bobBloodType = donor;
 
-        dealer.init();
-        alice.init(aliceBloodType);
-        bob.init(bobBloodType);
 
-        alice.setDealer(dealer);
-        bob.setDealer(dealer);
+        dealer.init();
+        alice.init(aliceBloodType, dealer.getAliceAndTriples());
+        bob.init(bobBloodType, dealer.getBobAndTriples());
 
         bob.receiveShares(alice.sendBShares());
         alice.receiveShares(bob.sendAShares());
-
 
         alice.computeNegationsAndXor();
         bob.computeNegationsAndXor();

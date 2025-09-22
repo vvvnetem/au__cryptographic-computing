@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Bob {
@@ -37,13 +39,9 @@ public class Bob {
     int secondLevelAndb;
     int thirdLevelAndb;
 
-    private Dealer dealer;
+    List<Dealer.AndTriple> andTriples = new ArrayList<>();
 
-    public void setDealer(Dealer dealer) {
-        this.dealer = dealer;
-    }
-
-    public void init(int[] input) {
+    public void init(int[] input, List<Dealer.AndTriple> andTriples) {
 
         int y1 = input[0];
         y1a = random.nextInt(2);
@@ -59,6 +57,8 @@ public class Bob {
         y3a = random.nextInt(2);
         y3b = y3 ^ y3a;
         notY3b = y3b; // Bob's share doesn't change for XOR with constant
+
+        this.andTriples = andTriples;
     }
 
     public int[] sendAShares() {
@@ -83,19 +83,19 @@ public class Bob {
         int da = aliceMessage[0];
         int ea = aliceMessage[1];
 
-        // Get multiplication triple from dealer
-        Dealer.AndTriple triple = dealer.getTriple(tripleIndex);
+        // Get multiplication triple
+        Dealer.AndTriple triple = andTriples.get(tripleIndex);
 
         // Compute Bob's masks
-        int db = xb ^ triple.uB;
-        int eb = yb ^ triple.vB;
+        int db = xb ^ triple.u;
+        int eb = yb ^ triple.v;
 
-        // Reconstruct the opened values (same as Alice does)
+        // Reconstruct d and e
         int d = da ^ db;
         int e = ea ^ eb;
 
         // Compute Bob's share of the result
-        int zb = triple.wB ^ (e & xb) ^ (d & yb) /*^ (e & d)*/;
+        int zb = triple.w ^ (e & xb) ^ (d & yb);
 
         // Send Bob's masks back to Alice
         return new int[]{db, eb, zb}; // Include result share
@@ -159,26 +159,5 @@ public class Bob {
 
     public int sendFinalShare() {
         return thirdLevelAndb;
-    }
-
-    public int[] createMask(int x, int y) {
-        int[] mask = new int[2];
-        Dealer.AndTriple triple1 = dealer.getTriple(0);
-        mask[0] = x ^ triple1.uB; // db for first AND
-        mask[1] = y ^ triple1.vB; // eb for first AND
-
-        return mask;
-    }
-
-    public int compute(int[] aliceMask, int x, int y) {
-        Dealer.AndTriple triple = dealer.getTriple(0);
-        int db = x ^ triple.uB;
-        int eb = y ^ triple.vB;
-
-        // Reconstruct the opened values (same as Alice does)
-        int d = aliceMask[0] ^ db;
-        int e = aliceMask[1] ^ eb;
-
-        return triple.wB ^ (e & x) ^ (d & y) /*^ (e & d)*/;
     }
 }

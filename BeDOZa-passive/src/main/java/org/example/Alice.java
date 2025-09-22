@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Alice {
@@ -35,13 +37,9 @@ public class Alice {
     int secondLevelAnda;
     int thirdLevelAnda;
 
-    private Dealer dealer;
+    List<Dealer.AndTriple> andTriples = new ArrayList<>();
 
-    public void setDealer(Dealer dealer) {
-        this.dealer = dealer;
-    }
-
-    public void init(int[] input) {
+    public void init(int[] input, List<Dealer.AndTriple> andTriples) {
         int x1 = input[0];
         x1b = random.nextInt(2);
         x1a = x1 ^ x1b;
@@ -53,6 +51,8 @@ public class Alice {
         int x3 = input[2];
         x3b = random.nextInt(2);
         x3a = x3 ^ x3b;
+
+        this.andTriples = andTriples;
     }
 
     public int[] sendBShares() {
@@ -84,18 +84,17 @@ public class Alice {
         int[] masks = new int[6]; // Store da, ea for each of the 3 AND gates
 
         // Prepare masks for all three AND gates
-        //Dealer.AndTriple triple1 = dealer.getTriple(0);
-        Dealer.AndTriple triple1 = dealer.getTriple(0);
-        masks[0] = x1a ^ triple1.uA; // da for first AND
-        masks[1] = notY1a ^ triple1.vA; // ea for first AND
+        Dealer.AndTriple triple1 = andTriples.get(0);
+        masks[0] = x1a ^ triple1.u; // da for first AND
+        masks[1] = notY1a ^ triple1.v; // ea for first AND
 
-        Dealer.AndTriple triple2 = dealer.getTriple(1);
-        masks[2] = x2a ^ triple2.uA; // da for second AND
-        masks[3] = notY2a ^ triple2.vA; // ea for second AND
+        Dealer.AndTriple triple2 = andTriples.get(1);
+        masks[2] = x2a ^ triple2.u; // da for second AND
+        masks[3] = notY2a ^ triple2.v; // ea for second AND
 
-        Dealer.AndTriple triple3 = dealer.getTriple(2);
-        masks[4] = x3a ^ triple3.uA; // da for third AND
-        masks[5] = notY3a ^ triple3.vA; // ea for third AND
+        Dealer.AndTriple triple3 = andTriples.get(2);
+        masks[4] = x3a ^ triple3.u; // da for third AND
+        masks[5] = notY3a ^ triple3.v; // ea for third AND
 
         return masks; // Send these to Bob
     }
@@ -106,20 +105,19 @@ public class Alice {
         int eb = bobMessage[1];
 
         // Get multiplication triple from dealer
-        Dealer.AndTriple triple = dealer.getTriple(tripleIndex);
+        Dealer.AndTriple triple = andTriples.get(tripleIndex);
 
         // Compute ALice's masks
-        int da = xa ^ triple.uA;
-        int ea = ya ^ triple.vA;
+        int da = xa ^ triple.u;
+        int ea = ya ^ triple.v;
 
-        // Reconstruct the opened values (same as Alice does)
+        // Reconstruct d and e
         int d = db ^ da;
         int e = eb ^ ea;
 
-        // Compute Bob's share of the result
-        int za = triple.wA ^ (e & xa) ^ (d & ya) ^ (e & d);
+        // Compute ALice's share of the result
+        int za = triple.w ^ (e & xa) ^ (d & ya) ^ (e & d);
 
-        // Send Bob's masks back to Alice
         return new int[]{da, ea, za}; // Include result share
     }
 
@@ -162,9 +160,9 @@ public class Alice {
         int[] aliceMask = new int[2]; // Store da, ea
 
         // Prepare mask
-        Dealer.AndTriple triple = dealer.getTriple(3);
-        aliceMask[0] = lastXor1a ^ triple.uA; // da for first AND
-        aliceMask[1] = lastXor2a ^ triple.vA;
+        Dealer.AndTriple triple = andTriples.get(3);
+        aliceMask[0] = lastXor1a ^ triple.u; // da
+        aliceMask[1] = lastXor2a ^ triple.v; // ea
 
         return aliceMask; // Send these to Bob
     }
@@ -184,9 +182,9 @@ public class Alice {
         int[] aliceMask = new int[2]; // Store da, ea
 
         // Prepare mask
-        Dealer.AndTriple triple = dealer.getTriple(4);
-        aliceMask[0] = secondLevelAnda ^ triple.uA; // da for first AND
-        aliceMask[1] = lastXor3a ^ triple.vA;
+        Dealer.AndTriple triple = andTriples.get(4);
+        aliceMask[0] = secondLevelAnda ^ triple.u; // da for first AND
+        aliceMask[1] = lastXor3a ^ triple.v;
 
         return aliceMask; // Send these to Bob
     }
@@ -206,25 +204,4 @@ public class Alice {
         return thirdLevelAnda ^ bobFinalShare;
     }
 
-
-    public int[] createMask(int x, int y) {
-        int[] mask = new int[2];
-        Dealer.AndTriple triple1 = dealer.getTriple(0);
-        mask[0] = x ^ triple1.uA; // da for first AND
-        mask[1] = y ^ triple1.vA; // ea for first AND
-
-        return mask;
-    }
-
-    public int compute(int[] bobMasks, int x, int y) {
-        Dealer.AndTriple triple = dealer.getTriple(0);
-        int da = x ^ triple.uA;
-        int ea = y ^ triple.vA;
-
-        // Reconstruct the opened values (same as Alice does)
-        int d = bobMasks[0] ^ da;
-        int e = bobMasks[1] ^ ea;
-
-        return triple.wA ^ (e & x) ^ (d & y) ^ (e & d);
-    }
 }
