@@ -1,17 +1,40 @@
 package org.example;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-public class Main {
-    public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.util.Random;
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
-        }
+public class Main {
+    public static final int[][] COMPATIBILITY_MATRIX = {
+            {1,1,1,1,1,1,1,1},
+            {1,0,1,0,1,0,1,0},
+            {1,1,0,0,1,1,0,0},
+            {1,0,0,0,1,0,0,0},
+            {1,1,1,1,0,0,0,0},
+            {1,0,1,0,0,0,0,0},
+            {1,1,0,0,0,0,0,0},
+            {1,0,0,0,0,0,0,0}
+    };
+
+    private static final String[] BLOOD_TYPES = {
+            "AB+", "AB-", "A+", "A-", "B+", "B-", "O+", "O-"
+    };
+    public static void main(String[] args) {
+        Random random = new Random();
+        ElGamal elGamal = new ElGamal();
+        Alice alice = new Alice(random.nextInt(8), elGamal);
+        Bob bob = new Bob(random.nextInt(8), elGamal);
+
+
+        ElGamal.PublicKey[] publicKeys = alice.createPublicKeys();
+        ElGamal.Ciphertext[] ciphertexts = bob.encryptBloodType(publicKeys);
+
+        BigInteger result = alice.retrieveResult(ciphertexts);
+        System.out.println("result: " + result);
+
+        System.out.println("Alice's blood type: " + BLOOD_TYPES[alice.bloodType]);
+        System.out.println("Bob's blood type: " + BLOOD_TYPES[7 - bob.bloodType]);
+        System.out.println("Can Alice receive from Bob? " + (result.equals(BigInteger.ONE) ? "Yes" : "No"));
+
     }
 }
