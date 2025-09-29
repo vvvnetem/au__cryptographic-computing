@@ -31,4 +31,9 @@ public class Alice {
     public BigInteger retrieveResult(ElGamal.Ciphertext[] ciphertexts) {
         return elGamal.decrypt(ciphertexts[bloodType], secretKey);
     }
+
+    //just for testing
+    public ElGamal.SecretKey getSecretKey() {
+        return secretKey;
+    }
 }

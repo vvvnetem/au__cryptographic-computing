@@ -6,17 +6,42 @@ import java.security.SecureRandom;
 public class ElGamal {
     private static final SecureRandom random = new SecureRandom();
     private static final int bitLength = 512; // Key size in bits
-    private static BigInteger p;
-    private static BigInteger q;
-    private static BigInteger g;
+    private  BigInteger p;
+    private  BigInteger q;
+    private  BigInteger g;
 
     public ElGamal() {
-        // Generate a random prime q
-        q = BigInteger.probablePrime(bitLength, random);
-        //safe prime p = 2q + 1
-        p = q.multiply(BigInteger.TWO).add(BigInteger.ONE);
+        do {
+            // Generate prime q
+            this.q = BigInteger.probablePrime(bitLength - 1, random);
+            // Check if p = 2q + 1 is also prime
+            this.p = q.multiply(BigInteger.valueOf(2)).add(BigInteger.ONE);
+        } while (!p.isProbablePrime(20));
+
         // Find a generator g (primitive root mod p)
-        g = findGenerator(p);
+        findGenerator();
+    }
+
+
+    private void findGenerator() {
+        // For safe prime p = 2q + 1, we need generator of subgroup of order q
+        // Start with 2 and find element of order q
+        BigInteger candidate = BigInteger.valueOf(2);
+
+        while (true) {
+            // Check if candidate^q mod p = 1 and candidate^1 mod p != 1
+            if (candidate.modPow(q, p).equals(BigInteger.ONE) &&
+                    !candidate.modPow(BigInteger.ONE, p).equals(BigInteger.ONE)) {
+                this.g = candidate;
+                break;
+            }
+            candidate = candidate.add(BigInteger.ONE);
+
+            // Safety check to avoid infinite loop
+            if (candidate.compareTo(p) >= 0) {
+                throw new RuntimeException("Could not find generator for subgroup");
+            }
+        }
     }
 
     // Public key class
@@ -50,16 +75,16 @@ public class ElGamal {
 
     // Ciphertext pair
     public static class Ciphertext {
-        public final BigInteger c1;
-        public final BigInteger c2;
+        public final BigInteger c;
+        public final BigInteger d;
 
-        public Ciphertext(BigInteger c1, BigInteger c2) {
-            this.c1 = c1;
-            this.c2 = c2;
+        public Ciphertext(BigInteger c, BigInteger d) {
+            this.c = c;
+            this.d = d;
         }
     }
 
-    public static SecretKey generatePrivateKey() {
+    public SecretKey generatePrivateKey() {
         // Generate private key x (1 < x < q-1)
         BigInteger x;
         do {
@@ -70,7 +95,7 @@ public class ElGamal {
     }
 
     // Generate public key from private key
-    public static PublicKey generatePublicKey(SecretKey secretKey) {
+    public PublicKey generatePublicKey(SecretKey secretKey) {
         // Compute public key y = g^x mod p
         BigInteger y = g.modPow(secretKey.x, p);
 
@@ -86,47 +111,34 @@ public class ElGamal {
 
     // Encrypt message using public key
     public Ciphertext encrypt(BigInteger message, PublicKey publicKey) {
-        // Generate random k (1 < k < q-1)
-        BigInteger k;
+        if (message.compareTo(p) >= 0) {
+            throw new IllegalArgumentException("Message must be less than p");
+        }
+        // Generate random k (1 < r < q-1)
+        BigInteger r;
         do {
-            k = new BigInteger(bitLength, random);
-        } while (k.compareTo(BigInteger.ONE) <= 0 || k.compareTo(q.subtract(BigInteger.ONE)) >= 0);
+            r = new BigInteger(bitLength, random);
+        } while (r.compareTo(BigInteger.ONE) <= 0 || r.compareTo(q.subtract(BigInteger.ONE)) >= 0);
 
-        // c1 = g^k mod p
-        BigInteger c1 = g.modPow(k, p);
+        // c = g^r mod p
+        BigInteger c = g.modPow(r, p);
 
-        // c2 = m * y^k mod p
-        BigInteger c2 = message.multiply(publicKey.y.modPow(k, p)).mod(p);
+        // d = m * y^k mod p
+        BigInteger d = message.multiply(publicKey.y.modPow(r, p)).mod(p);
 
-        return new Ciphertext(c1, c2);
+        return new Ciphertext(c, d);
     }
 
     // Decrypt ciphertext using secret key
     public BigInteger decrypt(Ciphertext ciphertext, SecretKey secretKey) {
-        // Compute c1^x mod p
-        BigInteger c1x = ciphertext.c1.modPow(secretKey.x, p);
+        // Compute c^x mod p
+        BigInteger cx = ciphertext.c.modPow(secretKey.x, p);
 
         // Compute modular inverse of c1^x
-        BigInteger c1xInv = c1x.modInverse(p);
+        BigInteger cxInv = cx.modInverse(p);
 
         // m = c2 * (c1^-x) mod p
-        return ciphertext.c2.multiply(c1xInv).mod(p);
-    }
-
-    // Find a generator (primitive root) modulo p
-    private static BigInteger findGenerator(BigInteger p) { //todo improve this method
-        BigInteger pMinus1 = p.subtract(BigInteger.ONE);
-
-        // For simplicity, we'll use a small generator that works for most cases
-        for (int g = 2; g < 100; g++) {
-            BigInteger candidate = BigInteger.valueOf(g);
-            if (candidate.modPow(pMinus1, p).equals(BigInteger.ONE)) {
-                return candidate;
-            }
-        }
-
-        // Fallback to 2 if no small generator found
-        return BigInteger.valueOf(2);
+        return ciphertext.d.multiply(cxInv).mod(p);
     }
 
     public PublicKey oGen() {

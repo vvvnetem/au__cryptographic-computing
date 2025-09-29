@@ -30,7 +30,6 @@ public class Main {
         ElGamal.Ciphertext[] ciphertexts = bob.encryptBloodType(publicKeys);
 
         BigInteger result = alice.retrieveResult(ciphertexts);
-        System.out.println("result: " + result);
 
         System.out.println("Alice's blood type: " + BLOOD_TYPES[alice.bloodType]);
         System.out.println("Bob's blood type: " + BLOOD_TYPES[7 - bob.bloodType]);
