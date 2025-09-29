@@ -4,7 +4,7 @@ Our implementation includes the following classes:
 
 * `Alice`: The class represents the receiver in an Oblivious Transfer protocol using ElGamal encryption.
 * `Bob`: The class acts as the sender in an Oblivious Transfer protocol using ElGamal encryption.
-* `ElGamal`: Implementation of the ElGamal public-key encryption scheme over a safe prime group Implements key pair generation, encryption, and decryption.
+* `ElGamal`: Implementation of the ElGamal public-key encryption scheme over a safe prime group with implementation of key pair generation, encryption, and decryption.
 * `Main`: The class used as a demonstration for Blood Type Compatibility using Secure ElGamal Encryption
 * `OTTest`: The class verifies the privacy-preserving blood type compatibility protocol implemented with ElGamal encryption and validates that the encrypted protocol result matches the expected compatibility for all 64 combinations. 
 
@@ -102,6 +102,6 @@ Enter to keep the current selection[+], or type selection number:
 
 ###  Runnig `mvn` test
 
-After succesfull installation of the packages Maven test can be run from the project's root with `mvn test -e`.
+After succesfull installation of the packages Maven test can be run from the project's root directory with `mvn test -e`.
 
 
