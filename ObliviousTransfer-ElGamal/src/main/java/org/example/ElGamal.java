@@ -113,21 +113,27 @@ public class ElGamal {
         return ciphertext.c2.multiply(c1xInv).mod(p);
     }
 
-    // Find a generator (primitive root) modulo p
-    private static BigInteger findGenerator(BigInteger p) { //todo improve this method
-        BigInteger pMinus1 = p.subtract(BigInteger.ONE);
+ // Find a generator (primitive root) modulo p
+private static BigInteger findGenerator(BigInteger p) {
+    BigInteger pMinus1 = p.subtract(BigInteger.ONE);
+    BigInteger q = pMinus1.divide(BigInteger.TWO); // since p = 2q + 1 (safe prime)
 
-        // For simplicity, we'll use a small generator that works for most cases
-        for (int g = 2; g < 100; g++) {
-            BigInteger candidate = BigInteger.valueOf(g);
-            if (candidate.modPow(pMinus1, p).equals(BigInteger.ONE)) {
-                return candidate;
-            }
+    while (true) {
+        // random candidate g in [2, p-2]
+        BigInteger g = new BigInteger(p.bitLength(), random);
+        if (g.compareTo(BigInteger.ONE) <= 0 || g.compareTo(pMinus1) >= 0) {
+            continue; // reject invalid ranges
         }
 
-        // Fallback to 2 if no small generator found
-        return BigInteger.valueOf(2);
+        // Check that g^2 mod p != 1 and g^q mod p != 1
+        // These ensure g generates the group (primitive root modulo p)
+        if (!g.modPow(BigInteger.TWO, p).equals(BigInteger.ONE) &&
+            !g.modPow(q, p).equals(BigInteger.ONE)) {
+            return g;
+        }
     }
+}
+
 
     public PublicKey oGen() {
         // Generate random s (1 < s < p-1)
