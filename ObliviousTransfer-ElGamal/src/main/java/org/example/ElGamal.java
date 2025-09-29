@@ -129,12 +129,16 @@ public class ElGamal {
         BigInteger sInv = s.modInverse(p);
         BigInteger mEncoded = ciphertext.c2.multiply(sInv).mod(p);
 
-        // Now decode mEncoded = g^m mod p, and m should be 0 or 1
+        // We assuming that the plaintext is restricted to {0,1} and  m is encoded as g^m mod p, where g is the generator. 
         if (mEncoded.equals(BigInteger.ONE)) {
+             // If mEncoded equals 1, the message corresponds to m = 0 (since g^0 = 1).
             return BigInteger.ZERO;
+            
         } else if (mEncoded.equals(g)) {
+             // mEncoded equals g, the message corresponds to m = 1 (because g^1 = g).
             return BigInteger.ONE;
         } else {
+            // In case mEncoded is neither 1 or g we throw an exception
             throw new IllegalStateException("Decryption failed: unexpected message value.");
         }
     }
