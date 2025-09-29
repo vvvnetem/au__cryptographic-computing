@@ -6,143 +6,132 @@ import java.security.SecureRandom;
 public class ElGamal {
     private static final SecureRandom random = new SecureRandom();
     private static final int bitLength = 512; // Key size in bits
-    private static BigInteger p;
-    private static BigInteger q;
-    private static BigInteger g;
+
+    private final BigInteger p; // safe prime p = 2q + 1
+    private final BigInteger q; // large prime
+    private final BigInteger g; // generator
+
 
     public ElGamal() {
-        // Generate a random prime q
-        q = BigInteger.probablePrime(bitLength, random);
-        //safe prime p = 2q + 1
-        p = q.multiply(BigInteger.TWO).add(BigInteger.ONE);
-        // Find a generator g (primitive root mod p)
-        g = findGenerator(p);
+        BigInteger qprime;
+        BigInteger pprime;
+
+        // Ensures we modInverse() will be invertable
+        while (true) {
+            qprime = BigInteger.probablePrime(bitLength - 1, random);
+            pprime = qprime.multiply(BigInteger.TWO).add(BigInteger.ONE);
+            if (pprime.isProbablePrime(100)) {
+                break;
+            }
+        }
+        this.q = qprime;
+        this.p = pprime;
+        this.g = findGenerator(p, q);
     }
 
-    // Public key class
-    public static class PublicKey {
-        public final BigInteger y;      // public key component
+    private static BigInteger findGenerator(BigInteger p, BigInteger q) {
+        BigInteger pMinus1 = p.subtract(BigInteger.ONE);
+        while (true) {
+            BigInteger g = new BigInteger(p.bitLength(), random);
+            if (g.compareTo(BigInteger.TWO) < 0 || g.compareTo(pMinus1) >= 0) continue;
 
+            // g^2 mod p != 1 and g^q mod p != 1
+            if (!g.modPow(BigInteger.TWO, p).equals(BigInteger.ONE)
+                    && !g.modPow(q, p).equals(BigInteger.ONE)) {
+                return g;
+            }
+        }
+    }
+
+    public class PublicKey {
+        public final BigInteger y;
         public PublicKey(BigInteger y) {
             this.y = y;
         }
     }
 
-    // Private key class
-    public static class SecretKey {
-        public final BigInteger x;      // secret key
-
+    public class SecretKey {
+        public final BigInteger x;
         public SecretKey(BigInteger x) {
             this.x = x;
         }
     }
 
-    // Key pair class
-    public static class KeyPair {
+    public class KeyPair {
         public final PublicKey publicKey;
         public final SecretKey secretKey;
-
         public KeyPair(PublicKey publicKey, SecretKey secretKey) {
             this.publicKey = publicKey;
             this.secretKey = secretKey;
         }
     }
 
-    // Ciphertext pair
-    public static class Ciphertext {
+    public class Ciphertext {
         public final BigInteger c1;
         public final BigInteger c2;
-
         public Ciphertext(BigInteger c1, BigInteger c2) {
             this.c1 = c1;
             this.c2 = c2;
         }
     }
 
-    public static SecretKey generatePrivateKey() {
-        // Generate private key x (1 < x < q-1)
+    public KeyPair generateKeyPair() {
         BigInteger x;
         do {
             x = new BigInteger(bitLength, random);
         } while (x.compareTo(BigInteger.ONE) <= 0 || x.compareTo(q.subtract(BigInteger.ONE)) >= 0);
 
-        return new SecretKey(x);
+        BigInteger y = g.modPow(x, p);
+        return new KeyPair(new PublicKey(y), new SecretKey(x));
     }
 
-    // Generate public key from private key
-    public static PublicKey generatePublicKey(SecretKey secretKey) {
-        // Compute public key y = g^x mod p
-        BigInteger y = g.modPow(secretKey.x, p);
-
-        return new PublicKey(y);
-    }
-
-    // Generate complete key pair
-    public KeyPair generateKeyPair() {
-        SecretKey secretKey = generatePrivateKey();
-        PublicKey publicKey = generatePublicKey(secretKey);
-        return new KeyPair(publicKey, secretKey);
-    }
-
-    // Encrypt message using public key
     public Ciphertext encrypt(BigInteger message, PublicKey publicKey) {
-        // Generate random k (1 < k < q-1)
+        if (!message.equals(BigInteger.ZERO) && !message.equals(BigInteger.ONE)) {
+            throw new IllegalArgumentException("Only messages 0 or 1 are supported.");
+        }
+
         BigInteger k;
         do {
             k = new BigInteger(bitLength, random);
         } while (k.compareTo(BigInteger.ONE) <= 0 || k.compareTo(q.subtract(BigInteger.ONE)) >= 0);
 
-        // c1 = g^k mod p
         BigInteger c1 = g.modPow(k, p);
-
-        // c2 = m * y^k mod p
-        BigInteger c2 = message.multiply(publicKey.y.modPow(k, p)).mod(p);
+        BigInteger c2 = publicKey.y.modPow(k, p).multiply(g.modPow(message, p)).mod(p);
 
         return new Ciphertext(c1, c2);
     }
 
-    // Decrypt ciphertext using secret key
     public BigInteger decrypt(Ciphertext ciphertext, SecretKey secretKey) {
-        // Compute c1^x mod p
-        BigInteger c1x = ciphertext.c1.modPow(secretKey.x, p);
+        BigInteger s = ciphertext.c1.modPow(secretKey.x, p);
 
-        // Compute modular inverse of c1^x
-        BigInteger c1xInv = c1x.modInverse(p);
+        // modInverse not invertable !
 
-        // m = c2 * (c1^-x) mod p
-        return ciphertext.c2.multiply(c1xInv).mod(p);
-    }
-
- // Find a generator (primitive root) modulo p
-private static BigInteger findGenerator(BigInteger p) {
-    BigInteger pMinus1 = p.subtract(BigInteger.ONE);
-    BigInteger q = pMinus1.divide(BigInteger.TWO); // since p = 2q + 1 (safe prime)
-
-    while (true) {
-        // random candidate g in [2, p-2]
-        BigInteger g = new BigInteger(p.bitLength(), random);
-        if (g.compareTo(BigInteger.ONE) <= 0 || g.compareTo(pMinus1) >= 0) {
-            continue; // reject invalid ranges
+        if (!s.gcd(p).equals(BigInteger.ONE)) {
+            throw new IllegalStateException("Decryption failed: s is not invertible modulo p.");
         }
 
-        // Check that g^2 mod p != 1 and g^q mod p != 1
-        // These ensure g generates the group (primitive root modulo p)
-        if (!g.modPow(BigInteger.TWO, p).equals(BigInteger.ONE) &&
-            !g.modPow(q, p).equals(BigInteger.ONE)) {
-            return g;
+
+        BigInteger sInv = s.modInverse(p);
+        BigInteger mEncoded = ciphertext.c2.multiply(sInv).mod(p);
+
+        // Now decode mEncoded = g^m mod p, and m should be 0 or 1
+        if (mEncoded.equals(BigInteger.ONE)) {
+            return BigInteger.ZERO;
+        } else if (mEncoded.equals(g)) {
+            return BigInteger.ONE;
+        } else {
+            throw new IllegalStateException("Decryption failed: unexpected message value.");
         }
     }
-}
-
 
     public PublicKey oGen() {
-        // Generate random s (1 < s < p-1)
-        BigInteger s;
+        // Generate a dummy public key that looks like y = g^x mod p
+        BigInteger dummyX;
         do {
-            s = new BigInteger(bitLength, random);
-        } while (s.compareTo(BigInteger.ONE) <= 0 || s.compareTo(p.subtract(BigInteger.ONE)) >= 0);
+            dummyX = new BigInteger(bitLength, random);
+        } while (dummyX.compareTo(BigInteger.ONE) <= 0 || dummyX.compareTo(q.subtract(BigInteger.ONE)) >= 0);
 
-        BigInteger h = s.multiply(s).mod(p);
-        return new PublicKey(h);
+        BigInteger y = g.modPow(dummyX, p);
+        return new PublicKey(y);
     }
 }
