@@ -125,13 +125,13 @@ public class ElGamal {
     }
 
     public PublicKey oGen() {
-        // Generate a dummy public key that looks like y = g^x mod p
-        BigInteger dummyX;
+        // Generate random s (1 < s < p-1)
+        BigInteger s;
         do {
-            dummyX = new BigInteger(bitLength, random);
-        } while (dummyX.compareTo(BigInteger.ONE) <= 0 || dummyX.compareTo(q.subtract(BigInteger.ONE)) >= 0);
+            s = new BigInteger(bitLength, random);
+        } while (s.compareTo(BigInteger.ONE) <= 0 || s.compareTo(p.subtract(BigInteger.ONE)) >= 0);
 
-        BigInteger y = g.modPow(dummyX, p);
-        return new PublicKey(y);
+        BigInteger h = s.multiply(s).mod(p);
+        return new PublicKey(h);
     }
 }
