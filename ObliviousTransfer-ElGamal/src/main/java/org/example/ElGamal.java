@@ -104,10 +104,13 @@ public class ElGamal {
     public BigInteger decrypt(Ciphertext ciphertext, SecretKey secretKey) {
         BigInteger s = ciphertext.c1.modPow(secretKey.x, p);
 
-        // modInverse not invertable !
-
+        // The modular inverse of an integer, let say `a` modulo `m` exists if and only if `gcd⁡(a,m)=1`
+        // We check therefore if the BigInteger value we want to invert is coprime with the modulus 
+        // before attempting the inversion (sInv):
         if (!s.gcd(p).equals(BigInteger.ONE)) {
-            throw new IllegalStateException("Decryption failed: s is not invertible modulo p.");
+
+            // In case gcd check fails we throw an exception due to s is not invertible modulo p.
+            throw new IllegalStateException("GCD check failed: Decryption cannot proceed due to invalid ciphertext or key");
         }
 
 
