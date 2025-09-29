@@ -16,9 +16,15 @@ public class ElGamal {
         BigInteger qprime;
         BigInteger pprime;
 
-        // Ensures we modInverse() will be invertable
+        // For ElGamal we want to ensure that `p` is chosen as a safeprime,
+        // which ensures $Z^*_p$ cyclic group has a large prime order subgroup (q).
         while (true) {
+
+            // We generate random prime with 1 bit length less than the key size
             qprime = BigInteger.probablePrime(bitLength - 1, random);
+
+            // We choose pprime as our safe prime candidate: pprime = 2 * qprime + 1
+            // If pprime will be prime with high confidence, then we assign p,q   
             pprime = qprime.multiply(BigInteger.TWO).add(BigInteger.ONE);
             if (pprime.isProbablePrime(100)) {
                 break;
@@ -26,6 +32,9 @@ public class ElGamal {
         }
         this.q = qprime;
         this.p = pprime;
+        
+        // We want to find the G generator of a subgroup order q
+        // in the multiplicative group modulo p
         this.g = findGenerator(p, q);
     }
 
@@ -36,6 +45,9 @@ public class ElGamal {
             if (g.compareTo(BigInteger.TWO) < 0 || g.compareTo(pMinus1) >= 0) continue;
 
             // g^2 mod p != 1 and g^q mod p != 1
+            // g will be a suitable generator for the subgroup if the following holds:
+                // $g^2 \neq 1 \mod p$, ensures that g is not order of 2
+                // $g^2 \neq 1 mod p$, ensures oderder is not dividing with q 
             if (!g.modPow(BigInteger.TWO, p).equals(BigInteger.ONE)
                     && !g.modPow(q, p).equals(BigInteger.ONE)) {
                 return g;
