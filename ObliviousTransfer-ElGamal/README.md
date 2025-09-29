@@ -63,6 +63,8 @@ have the specific packages installed.
 
 For testing purpose Fedora 42 was used (https://docs.fedoraproject.org/en-US/fedora/f42/).
 
+The necessary packages can be installed with `dnf` package manager: 
+
 `sudo dnf install -y java-25-openjdk java-25-openjdk-devel maven`
 
 ### Select the proper Java 25 binaries
@@ -103,5 +105,24 @@ Enter to keep the current selection[+], or type selection number:
 ###  Runnig `mvn` test
 
 After succesfull installation of the packages Maven test can be run from the project's root directory with `mvn test -e`.
+
+```{bash}
+# Snippet after succesfull build/testing
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 65.17 s -- in OTTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  01:06 min
+[INFO] Finished at: 2025-09-29T12:02:26+02:00
+[INFO] ------------------------------------------------------------------------
+
+```
+
+
 
 
