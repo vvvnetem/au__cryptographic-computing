@@ -5,7 +5,7 @@ import java.security.SecureRandom;
 
 public class ElGamal {
     private static final SecureRandom random = new SecureRandom();
-    private static final int bitLength = 512; // Key size in bits
+    private static final int bitLength = 2048; // Key size in bits
 
     private final BigInteger p; // safe prime p = 2q + 1
     private final BigInteger q; // large prime
