@@ -1,4 +1,4 @@
-# Oblivious Transfer for Blood Type Compatibility
+# Oblivious Transfer for Blood Type Compatibility with Garbled Circuits
 
 Our implementation includes the following classes: 
 
