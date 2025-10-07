@@ -6,12 +6,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class GCTest {
 
-    // Blood type encoding: [A, B, Rh]
-    // O- = [0,0,0], O+ = [0,0,1]
-    // A- = [1,0,0], A+ = [1,0,1]
-    // B- = [0,1,0], B+ = [0,1,1]
-    // AB- = [1,1,0], AB+ = [1,1,1]
-
     @Test
     @DisplayName("Test all blood type compatibility combinations")
     public void testAllBloodTypeCompatibility() throws Exception {

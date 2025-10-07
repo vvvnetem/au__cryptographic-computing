@@ -193,7 +193,7 @@ class Bob {
     }
 
     /**
-     * Fisher-Yates shuffle algorithm to randomly permute the gate entries.
+     * Algorithm to randomly permute the gate entries.
      * This prevents Alice from learning which entry corresponds to which input.
      */
     private void shuffleArray(int[][] array) {

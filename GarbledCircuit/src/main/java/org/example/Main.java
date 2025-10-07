@@ -1,20 +1,15 @@
 package org.example;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) throws Exception {
-        // Alice's input (recipient): xA, xB, xR (e.g., A+ = 1,0,1)
-        int[] aliceInput = {0, 0, 0}; // A+
+        // Alice's input (recipient): xA, xB, xR
+        int[] aliceInput = {0, 0, 0};
 
-        // Bob's input (donor): yA, yB, yR (e.g., O+ = 0,0,1)
-        int[] bobInput = {1, 0, 0}; // O+
+        // Bob's input (donor): yA, yB, yR
+        int[] bobInput = {1, 0, 0};
 
-        System.out.println("Blood Compatibility Check using Garbled Circuits");
-        System.out.println("================================================");
         System.out.println("Alice (Recipient): " + bloodTypeString(aliceInput));
         System.out.println("Bob (Donor): " + bloodTypeString(bobInput));
-        System.out.println();
 
         // Step 1: Bob garbles the circuit
         Bob bob = new Bob();
