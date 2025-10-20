@@ -36,25 +36,13 @@ Identity-Based Encryption from the Weil Pairing (Proposal)}
 
     \maketitle
 
-    \section{ Brief Summary}
+    % Project Proposal
+    \include{proposal}
 
-    In regular public-key encryption schemes you need to know the public key
-    of the people you want to talk to. This introduces a number of problems in terms of key management.
+    % Project Report
+    \include{report}
 
-    \textit{Identity Based Encryption (IBE)} is the simplest case of functional encryption where we can encrypt
-    messages that can only be decrypted by the owner of that email address. This requires the existence
-    of some central authority that checks that we are the owner of some $id$  and
-    then provides us with a secret key corresponding to this identifier $sk_{id}$.
-
-    Now everyone can encrypt using some public parameter $pp$ and our identity and compute $C = Enc(pp, id, m)$ in such a way that $C$ reveals no information about $m$ but the owner of $sk_{id}$ can compute $m = Dec(sk_{id}, C)$.
-
-    \section{Tasks}
-
-    In this project our main tasks: read, understand, and implement a simple IBE scheme which was presented
-    in [BF01] with use of  \textit{pairing}s as a black-box.
-
+    \newpage
     \printbibliography
-
-    Teszt ref: \cite{ref01}
 
 \end{document}
