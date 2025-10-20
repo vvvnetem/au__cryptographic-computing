@@ -1,6 +1,7 @@
 # Java 
 
-openjdk 25 2025-09-16
+* `openjdk 25 2025-09-16`
+* `OpenJDK Runtime Environment (Red_Hat-25.0.0.0.36-1) (build 25+36)`
 
 ## Maven 
 
