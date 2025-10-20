@@ -1,0 +1,130 @@
+# =========================
+# Java / Maven / Gradle
+# =========================
+*.class
+*.jar
+*.war
+*.ear
+
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Gradle
+.gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+.kotlin
+
+# =========================
+# IntelliJ IDEA
+# =========================
+.idea/modules.xml
+.idea/jarRepositories.xml
+.idea/compiler.xml
+.idea/libraries/
+*.iws
+*.iml
+*.ipr
+
+# =========================
+# Eclipse
+# =========================
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# =========================
+# NetBeans
+# =========================
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# =========================
+# VS Code
+# =========================
+.vscode/
+
+# =========================
+# OS-specific
+# =========================
+# macOS
+.DS_Store
+# Linux
+*~
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# =========================
+# Logs & temp files
+# =========================
+*.log
+
+# =========================
+# LaTeX
+# =========================
+# Core LaTeX auxiliary files
+*.aux
+*.bbl
+*.blg
+*.brf
+*.idx
+*.ilg
+*.ind
+*.lof
+*.log
+*.lot
+*.out
+*.toc
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.ist
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*.pdfsync
+
+# Intermediate files (images, tmp, etc.)
+*.dvi
+*.ps
+*.nav
+*.snm
+*.vrb
+*.xdy
+*.tdo
+*.run.xml
+*.bcf
+
+# Latexmk and TexShop
+latex.out/
+.texpadtmp/
+*.synctex.gz(busy)
+*.pdfsync
+
+# Editors and build folders
+*.texpadtmp
+auto/
+*.out.ps
+*.out.dvi
+*.auxlock
+
+# Generated PDFs (optional, comment this out if you want to keep compiled PDFs)
+# *.pdf
