@@ -85,7 +85,6 @@ Desktop.ini
 *.ilg
 *.ind
 *.lof
-*.log
 *.lot
 *.out
 *.toc
@@ -117,7 +116,6 @@ Desktop.ini
 latex.out/
 .texpadtmp/
 *.synctex.gz(busy)
-*.pdfsync
 
 # Editors and build folders
 *.texpadtmp

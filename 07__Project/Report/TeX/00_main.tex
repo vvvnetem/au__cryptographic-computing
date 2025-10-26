@@ -24,6 +24,9 @@
     keys
 ]{cryptocode}
 
+\usepackage[colorlinks]{hyperref}
+\usepackage[printonlyused,withpage]{acronym}
+
 \usepackage{biblatex}
 \usepackage{adjustbox}
 \addbibresource{forrasok.bib} %Import the bibliography file
@@ -36,13 +39,34 @@ Identity-Based Encryption from the Weil Pairing (Proposal)}
 
     \maketitle
 
-    % Project Proposal
-    \include{proposal}
+    % Acronym list
+    \include{abbrev}
 
-    % Project Report
-    \include{report}
+    \listoffigures
+    \listoftables
+    \tableofcontents
+    \newpage
+
+% leiras a vegleges project specifikaciorol (5-10 oldal??)
+    \include{todo}
+
+% TODO: proposal-t updatelni kell <- atolvasas utan
+%     \include{proposal}
+
+    % Introduction to Boneh-Frenkel based IBE
+    \include{report/intro}
+
+    % Implementation of Boneh-Frenkel based IBE
+    %\include{report/arch}
+
+    % Boneh-Frenkel based IBE scenarios based on ETSI
+    %\include{report/scenario}
 
     \newpage
     \printbibliography
+
+    % Appendix
+    %\include{report/appendix/
+    %\include{report/appendix/environment}
 
 \end{document}
