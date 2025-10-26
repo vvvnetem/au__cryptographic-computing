@@ -22,14 +22,28 @@ The authentication takes places in the same way \textit{Bob} would authenticate
 himself to a trusted Certificate Authority (denoted as CA furthermore).
 \textit{Bob} can then therefore read his e-mail sent by \textit{Alice}.
 
-In comparison to an existing secure e-mail infrastructure, with the use of the proposed IBE scheme\cite{BF01}
+In comparison to an existing secure e-mail infrastructure,
+with the use of the proposed fully functional
+identity-based encryption scheme\cite{BF01}
 \textit{Alice} can send an encrypted mail to \textit{Bob} even if he has not yet
-setup his public key certificate.
+setup his public key certificate. Regarding the system's performance,
+now it becames comparable to the performance of
+ElGamal encryption in $\mathcal{F}^{*}_p$. The security of the
+Boneh-Frenkel scheme is analogues to the computational Diffie-Hellman assumption,
+namely the new system has chosen ciphertext security in the random oracle model\cite{Bellare1993}.
 
 
-%% todo: ide a kesobbi varians + nehany hatrany, Revocation, Key escrow, ID is public
+%% todo: ide a kesobbi varians + nehany hatrany,
+%% Revocation, Key escrow, ID is public
 Also note that key escrow is inherent in identity-based
-e-mail systems: the PKG knows Bob’s private key. We discuss key revocation, as well as several new
+e-mail systems: the PKG knows Bob’s private key.
+
+
+%% [20, 22] + distributed master key mechanism
+
+
+
+We discuss key revocation, as well as several new
 applications for IBE schemes in the next section.
 
 %% Review previous schemes + new variants

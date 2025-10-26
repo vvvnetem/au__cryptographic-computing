@@ -26,21 +26,48 @@
 
 \usepackage[colorlinks]{hyperref}
 \usepackage[printonlyused,withpage]{acronym}
-
 \usepackage{biblatex}
 \usepackage{adjustbox}
+
 \addbibresource{forrasok.bib} %Import the bibliography file
+
+% Java Language specific code env.
+\usepackage{color}
+
+\definecolor{pblue}{rgb}{0.13,0.13,1}
+\definecolor{pgreen}{rgb}{0,0.5,0}
+\definecolor{pred}{rgb}{0.9,0,0}
+\definecolor{pgrey}{rgb}{0.46,0.45,0.48}
+
+\usepackage{listings}
+\lstset{language=Java,
+  showspaces=false,
+  showtabs=false,
+  breaklines=true,
+  showstringspaces=false,
+  breakatwhitespace=true,
+  commentstyle=\color{pgreen},
+  keywordstyle=\color{pblue},
+  stringstyle=\color{pred},
+  basicstyle=\ttfamily,
+  moredelim=[il][\textcolor{pgrey}]{$$},
+  moredelim=[is][\textcolor{pgrey}]{\%\%}{\%\%}
+}
+
+\usepackage{orcidlink} % TODO: author@orcid <- orcid
+
+% TODO: Normalis boritokep, pl: Thesis minta alapjan
 \title{Aarhus University \\ Cryptographic Computing \\ Group 2\\
-Identity-Based Encryption from the Weil Pairing (Proposal)}
+Identity-Based Encryption from the Weil Pairing}
 \author{ Fanni Zsanett Ferenczi \\ Miklos Daniel Vadasz}
-\date{August 2025}
+\date{today}
 
 \begin{document}
 
     \maketitle
 
     % Acronym list
-    \include{abbrev}
+    \include{report/abbrev}
 
     \listoffigures
     \listoftables
@@ -48,9 +75,9 @@ Identity-Based Encryption from the Weil Pairing (Proposal)}
     \newpage
 
 % leiras a vegleges project specifikaciorol (5-10 oldal??)
-    \include{todo}
+%     \include{todo}
 
-% TODO: proposal-t updatelni kell <- atolvasas utan
+%  :INFO: project proposal BrightSpace-re
 %     \include{proposal}
 
     % Introduction to Boneh-Frenkel based IBE
@@ -60,13 +87,28 @@ Identity-Based Encryption from the Weil Pairing (Proposal)}
     %\include{report/arch}
 
     % Boneh-Frenkel based IBE scenarios based on ETSI
+    %% TODO: sec based scenarios
+    %% TODO: ide bekotni a malicious 3rd party eseteket
+    %% TODO: distributed key management esete
     %\include{report/scenario}
+
+    % Evaulation and results
+    %% TODO: kiertekelsek, osszegzes
+    %\include{report/eval}
+
+    % Open questions and further studies
+    %% TODO: Minden ami az alap scheme-be nem fert bele, AIBE, stb.
+
 
     \newpage
     \printbibliography
 
     % Appendix
-    %\include{report/appendix/
+
+    %% ECC specific
+    %\include{report/appendix/ecc}
+
+    %% Environment + labsetup
     %\include{report/appendix/environment}
 
 \end{document}
