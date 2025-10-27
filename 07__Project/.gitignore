@@ -126,3 +126,4 @@ auto/
 
 # Generated PDFs (optional, comment this out if you want to keep compiled PDFs)
 # *.pdf
+*.drawio

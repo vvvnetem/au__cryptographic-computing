@@ -51,11 +51,19 @@
 % allocated ip port numbers
 @misc{allocatednumbers,
     author = {Joyce K. Reynolds},
-    title = {Assigned Numbers: RFC 1700 is Replaced by an On-line Database
-},
+    title = {Assigned Numbers: RFC 1700 is Replaced by an On-line Database},
     year = {2002},
     url = {https://datatracker.ietf.org/doc/html/rfc3232},
     note = {Accessed: 2025-03-28}
+}
+
+% OCI Containers
+
+@misc{oci.containers,
+    author = {Red Hat},
+    title = {Open Container Initiative support},
+    url = {https://docs.redhat.com/en/documentation/red_hat_quay/3/html/use_red_hat_quay/oci-intro},
+    note = {Accessed: 2025-10-28}
 }
 
 @misc{podman,
@@ -178,6 +186,47 @@ https://github.com/peeyushy95/Identity-Based-Encryption/tree/master
 % Cryptographic
 % -------------------------------------
 
+% Treshold cryptography
+
+%% 22
+@InProceedings{crypto.seckeydistdl,
+    author="Gennaro, Rosario
+        and Jarecki, Stanis{\l}aw
+        and Krawczyk, Hugo
+        and Rabin, Tal",
+    editor="Stern, Jacques",
+    title="Secure Distributed Key Generation for Discrete-Log Based Cryptosystems",
+    booktitle="Advances in Cryptology --- EUROCRYPT '99",
+    year="1999",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="295--310",
+    isbn="978-3-540-48910-8"
+}
+
+    %% TODO: Secret sharing for treshold cryptography
+    %%% https://csrc.nist.rip/Projects/threshold-cryptography
+    %%% https://www.certik.com/resources/blog/threshold-cryptography-i-distributed-key-generation
+    %%% https://dl.acm.org/doi/10.5555/1754868.1754929
+
+    %% TODO: Secure Distributed Key Generation
+    %% ---------------------------------------
+    %%% https://en.wikipedia.org/wiki/Distributed_key_generation
+    %%% https://csrc.nist.gov/csrc/media/presentations/2023/mpts2023-day1-talk-dl-dkg/images-media/mpts2023-1b1-slides--katz--DKG-DL.pdf
+    %%% https://crypto.unibe.ch/archive/theses/2023.msc.markus.eggimann.pdf
+
+        %%%% %% 1
+            %Kate, Aniket; Goldberg, Ian (2010). "Distributed Private-Key Generators for Identity-Based Cryptography".
+            %Security and Cryptography for Networks. Lecture Notes in Computer Science. Vol. 6280. pp. 436–453.
+            %CiteSeerX 10.1.1.389.4486. doi:10.1007/978-3-642-15317-4_27. ISBN 978-3-642-15316-7.
+
+        %%% 2
+        %Gennaro, Rosario; Jarecki, Stanislaw; Krawczyk, Hugo; Rabin, Tal (24 May 2006).
+        %"Secure Distributed Key Generation for Discrete-Log Based Cryptosystems".
+        %Journal of Cryptology. 20 (1): 51–83. CiteSeerX 10.1.1.134.6445.
+        %doi:10.1007/s00145-006-0347-3. S2CID 3331212.
+%% ---------------------------------------
+
 %% Pairings
 
 %%% TODO
@@ -219,7 +268,7 @@ https://github.com/peeyushy95/Identity-Based-Encryption/tree/master
 }
 
 
-    % BF01
+% BF01
 %% paywall mogotti teljes pdf: [https://crypto.stanford.edu/~dabo/papers/bfibe.pdf]
 @article{BF01,
     author = {Boneh, Dan and Franklin, Matthew},

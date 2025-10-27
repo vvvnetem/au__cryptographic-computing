@@ -25,6 +25,7 @@
 ]{cryptocode}
 
 \usepackage[colorlinks]{hyperref}
+
 \usepackage[printonlyused,withpage]{acronym}
 \usepackage{biblatex}
 \usepackage{adjustbox}
@@ -66,9 +67,6 @@ Identity-Based Encryption from the Weil Pairing}
 
     \maketitle
 
-    % Acronym list
-    \include{report/abbrev}
-
     \listoffigures
     \listoftables
     \tableofcontents
@@ -77,15 +75,16 @@ Identity-Based Encryption from the Weil Pairing}
 % leiras a vegleges project specifikaciorol (kb. 10-15 oldal)
 %     \include{todo}
 
-%  :INFO: project proposal BrightSpace-re
-%     \include{proposal}
+    % Abbreviations, glossaries
+    %\include{report/glossaries/acronym}
 
-    % Introduction to Boneh-Frenkel based IBE
-    \include{report/intro}
+    % Introduction to Boneh-Frenkel based IBE scheme
+    \include{report/sections/intro}
 
     % Implementation of Boneh-Frenkel based IBE
     %\include{report/arch}
 
+    % INFO: Ezt lehet majd belekene rakni az elozobe, kesobb...
     % Boneh-Frenkel based IBE scenarios based on ETSI
     %% TODO: sec based scenarios
     %% TODO: ide bekotni a malicious 3rd party eseteket
@@ -103,6 +102,9 @@ Identity-Based Encryption from the Weil Pairing}
     \newpage
     \printbibliography
 
+    % Glossaries, acronyms
+    \printglossary[type=\acronymtype]
+
     % Appendix
 
     %% ECC specific
@@ -110,5 +112,6 @@ Identity-Based Encryption from the Weil Pairing}
 
     %% Environment + labsetup
     %\include{report/appendix/environment}
+
 
 \end{document}

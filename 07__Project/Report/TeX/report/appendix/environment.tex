@@ -1,1 +1,45 @@
 %% LabSetup
+
+%% Automated Container Environment
+\section{Automated Building of IBE Lab environment}
+\label{apx:lab-final_envbuild}
+
+
+Podman is a daemonless, open source, Linux native tool designed to make it easy to find,
+run, build, share and deploy applications
+using Open Containers Initiative (OCI)\cite{oci.containers} Containers and
+Container Images.\cite{podman} Similarly to other common Container Engines (Docker, CRI-O, containerd),
+Podman relies on an OCI compliant Container Runtime (\lstinline{runc}, \lstinline{crun}, \lstinline{runv}, etc.)
+to interface with the operating system and create the running containers.\cite{podman}
+
+\subsection{Cleanup the existing environment}
+
+The \lstinline{IBE_LAB.yml} will build the whole lab environment from scratch,
+thus any previously made network and containers related to IBE lab can be removed
+by running the cleanup script showed within \textit{\ref{apx.code.env.cleaup} snippet}.
+
+%% TODO: Snippet from `cleanup_ibe.lab.sh`
+\begin{lstlisting}[language=bash, caption=Host preparation for building the IBE environment, label=apx.code.env.cleaup]
+    # IBE specific cleanup script snippet <-
+\end{lstlisting}
+
+% ---
+
+\subsection{Review of \textit{Dockerfiles}\cite{docker.dockerfiles}}
+\label{apx:lab-final_dockerfiles}
+
+A \lstinline{Dockerfile} is basically a text document that contains all the necessary
+commands to call on the command line to assemble an image.
+
+
+% TODO; A vegleges architecture alapjan
+For this specific lab I assembled the files according the network topology:
+\lstinline{Clientfile}, \lstinline{Serverfile},
+\lstinline{SiteA}, \lstinline{SiteB}
+
+
+\subsubsection{Serverfile}
+\label{apx:dockerfile.serverfile}
+
+\begin{lstlisting}[language=bash,caption=Serverile overview for container vpn-server-10.9.0.11]
+# ===========================================================
