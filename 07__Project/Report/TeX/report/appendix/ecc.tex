@@ -1,1 +1,102 @@
 %% ECC specific appendix
+
+%%% ECC curve specifikus
+\section{Basics for Elliptic Curve Theory}
+\label{sec:apx.ecc.curves}
+
+% 2 curve csalad:
+An elliptic curve is the set of solutions to the \textit{Weierstrass form}
+\textit{equation \ref{eq:ecc.weierstrass}} with respect to
+$(x,y) \in \mathcal{F}_{q^m} \times \mathcal{F}_{q^m}$.\cite{ecc.fam.param}
+
+% Weierstrass equation
+\begin{equation}
+\label{eq:ecc.weierstrass}
+E: y^2 = x^3 + ax + b,
+\end{equation}
+where $a,b \in \mathcal{F}_{q^m}$ $\Delta \neq 0 $ (discriminant)
+and a point at infinity ($\infty$).\cite{ecc.fam.param}
+
+Also $E'$ a degree $d$ twist of $E$ is an isomorphic curve to $E$
+over the algebraic closure of $\mathcal{F}_{q^m}$. The only possible
+degrees for elliptic curves are $d \in {2,3,4,6}$.\cite{ecc.fam.param}
+
+%   TODO: BF01 alapjan megnezni, majd, hogy kell e itt ez az elmeleti resz.
+%   TODO: A pairinghez legyen library hasznalva a side channel, timing, etc.
+%           attack miatt --> de az elemeleti reszben be kell irni, hogy mi miert
+%           lett hasznalva
+\subsubsection{Hasse condition}
+
+The order $n$ of the curve is the number of points that satisfy
+the curve equation. The \textit{Hasse conddition} states the following
+\textit{\ref{eq:ecc.hassecond} equation}:
+
+\begin{equation}
+    \label{eq:ecc.hassecond}
+    n = q^m +1 - t,~~ \lvert t \rvert \leq 2 \sqrt{q^m}
+\end{equation}
+
+We call the curve \textit{supersingular} if $q$ divides $t$.
+
+The order of point $P$ is the smallest integer $r$ such that
+$rP = \infty$. It is also true that the order of the point
+is a dividant of the curve order: $r|n$.\cite{ecc.fam.param}
+
+The $r$-torsion subgroup (denoted as $E(\mathcal{F}_{q^m}[r])$) is the
+set of points $P$ in which their oder divides $r$.\cite{ecc.fam.param}
+
+%   TODO: ETSI alapjan ha mas curve-re is ellenorznik
+% Edwards Curve
+% Montgomery curve
+
+\subsection{Bilinear pairings}
+\label{ssec:apx.ecc.curves.pairings}
+
+Let $\mathcal{G}_1 = \left< P \right>$ and $\mathcal{G}_2 = \left< P \right>$
+be additive groups and $\mathcal{G}_T$ be a
+multiplicative group such that $\left\| \mathcal{G}_1 \right\| = \left\| \mathcal{G}_2 \right\| = \left\| \mathcal{G}_T \right\|= \mathrm{prime}~ r$
+
+We call the $e: \mathcal{G}_1 \times \mathcal{G}_2 \rightarrow \mathcal{G}_T $
+addmissible biilinear map if \textit{bilinearity} and
+\textit{non-degeneracy} properties are satisfied:
+
+\begin{itemize}
+    \item[] \textbf{Bilinearity: } given $(V, W) \in \mathcal{G}_1 \times \mathcal{G}_2$ and
+    $(a,b) \in \mathcal{Z}^{*}_{r}$:
+    \begin{itemize}
+        % Azonossagok:
+        \item[] $e(aV, bW) = e(V, W)^{ab} = e(abV, W) = e(V, abW) = e(bV, aW)$
+        \end{itemize}
+    \item[] \textbf{Non-degeneracy:} $e(P,Q) \neq 1_{\mathcal{G}_T}$, 
+    \end{itemize}
+
+% Properties of general pairings
+%% TODO: Ide a konkret weil pairinget hozzarakni +
+%%       a unit teszteket a valasztott parameterek alapjan ide berakni
+\subsubsection{Properties of pairings}
+
+In case of pairings ( $e: \mathcal{G}_1 \times \mathcal{G}_2 \rightarrow \mathcal{G}_T $) there are some properties we can rely on.
+Namely, $\mathcal{G}_1$ is typically a subgroup of $E(\mathcal{F}_q)$,
+$\mathcal{G}_2$ is typically a subgroup of $E(\mathcal{F}_q^k)$,
+lastly $\mathcal{G}_T$ is a multiplicative subgroup of $\mathcal{F}^*_{q^k}$.\cite{ecc.fam.param}
+
+% In practice we want small `k` for computable pairing
+The embedding degree of $\mathcal{F}_q$ is the smallest integer $k$,
+in which we can embed the $r$-torsion group: $r|(q^k-1)$. For efficiency reasons
+we want to the largest $d$ such that $d|k$.\cite{ecc.fam.param}
+The families of ordinary curves usually have $k < 50$, random curves have
+$k \approx q$, but for supersingular curves we have embedding degree of
+$k \leq 6$.\cite{ecc.fam.param}
+
+From the \textit{Adversary}'s point of view $k$ is usually very large and hence mapping
+the problem into the $\mathcal{F}_{p^k}$ ﬁeld is useless for an attacker.
+As for super-singular curves that the $k$ embedding degree
+is small, but on the other hand, If we choose the curves large enough,
+discrete log will still be hard despite the attacks.\cite{crypto.ivan.cryptology}
+
+
+
+
+For this practical reasons we choosed standardized curves mentioned in
+\textit{subsection \label{ssec:ibe.bonehfranklin.scheme}}.
+

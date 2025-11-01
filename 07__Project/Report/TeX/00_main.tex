@@ -82,18 +82,18 @@ Identity-Based Encryption from the Weil Pairing}
     \include{report/sections/intro}
 
     % Implementation of Boneh-Frenkel based IBE
-    %\include{report/arch}
+    \include{report/sections/arch}
 
     % INFO: Ezt lehet majd belekene rakni az elozobe, kesobb...
     % Boneh-Frenkel based IBE scenarios based on ETSI
     %% TODO: sec based scenarios
     %% TODO: ide bekotni a malicious 3rd party eseteket
     %% TODO: distributed key management esete
-    %\include{report/scenario}
+    \include{report/sections/scenario}
 
     % Evaulation and results
     %% TODO: kiertekelsek, osszegzes
-    %\include{report/eval}
+    %\include{report/sections/eval}
 
     % Open questions and further studies
     %% TODO: Minden ami az alap scheme-be nem fert bele, AIBE, stb.
@@ -106,6 +106,9 @@ Identity-Based Encryption from the Weil Pairing}
     \printglossary[type=\acronymtype]
 
     % Appendix
+
+    %% IBE Specific
+    \include{report/appendix/ibebase}
 
     %% ECC specific
     %\include{report/appendix/ecc}

@@ -2,7 +2,6 @@
 % -------------------------------------
 
 
-
 %% syssec handin-bol
 %%% ............................................
 
@@ -17,8 +16,7 @@
 
 % TLS13 Ciphersuite accordign to: RFC 5289
 % TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256/
-% ecommendation:https://ciphersuite.info/cs/TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256/"
-
+% Recommendation: https://ciphersuite.info/cs/TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256/"
 @online{tls13ciphersuite,
     title = { TLS Elliptic Curve Cipher Suites with SHA-256/384 and AES Galois Counter Mode (GCM)},
     journal = {},
@@ -110,6 +108,16 @@
     month = {},
     url = {https://datatracker.ietf.org/doc/html/rfc9112},
     note = {[Online; accessed 03. April. 2025]}
+}
+
+
+% rbac separation of dutties
+@Book{sec.rbac.duties,
+    author       = {Paul C. van Oorschot},
+    title        = {Computer Security and the Internet: Tools and Jewels from Malware to Bitcoin},
+    year         = {2021},
+    publisher    = {Springer},
+    pages        = {370}
 }
 
 % Random oracle model
@@ -231,12 +239,21 @@ https://github.com/peeyushy95/Identity-Based-Encryption/tree/master
 
 %%% TODO
 % https://course1.winona.edu/eerrthum/Papers/WeilVsTate.pdf
-
+%% https://crypto.stanford.edu/pbc/notes/ep/tate.html
 
 %% Elliptic curve arithmetics
 
+%%% Choosing Elliptic curve family and curve parameters for BF based IBE
+@online{ecc.fam.param,
+    title = {  Introduction to Pairings },
+    author = { Diego F. Aranha },
+    year = {2017},
+    note = {[Online; accessed 25. May. 2025]},
+    url = {https://ecc2017.cs.ru.nl/slides/ecc2017school-aranha.pdf}
+}
+
 %%% TODO
-% https://crypto.stanford.edu/pbc/notes/ep/tate.html
+%
 % https://crypto.stanford.edu/pbc/notes/ep/
 % https://crypto.stanford.edu/pbc/notes/ep/redefine.html
 % https://eprint.iacr.org/2003/242.pdf
@@ -244,6 +261,32 @@ https://github.com/peeyushy95/Identity-Based-Encryption/tree/master
 
 % Identity Based Encryption
 % -------------------------------------
+
+
+% IBE IETF standard beli valtozata
+    % TODO: https://www.ietf.org/rfc/rfc5091
+@misc{ibe.rfc5091,
+    number =    5091,
+    howpublished =  {RFC 5091},
+    publisher = {RFC Editor},
+    doi =       {10.17487/RFC5091},
+    url =       {https://www.rfc-editor.org/info/rfc5091},
+    author =    {Luther Martin and Xavier Boyen},
+    title =     {{Identity-Based Cryptography Standard (IBCS) \#1: Supersingular Curve Implementations of the BF and BB1 Cryptosystems}},
+    pagetotal = 63,
+    year =      2007,
+    month =     dec
+}
+
+% IND-CCA security for IBE in the Random-Oracle (RO) model
+    %% TODO:
+    %% TODO: https://www.cs.tau.ac.il/%7Ecanetti/materials/bchk06.pdf
+@online{ibe.sec.cca,
+    title = {  Identity based and CCA-secure encryption },
+    author = { Ilia Lotosh },
+    note = {[Online; accessed 25. May. 2025]},
+    url = {https://www.cs.tau.ac.il/~canetti/materials/sp09-sem-lec7.pdf}
+}
 
 % Shamir's original paper on IBE system for crypto system and signatures
 @InProceedings{Shamir41,
@@ -309,6 +352,15 @@ https://github.com/peeyushy95/Identity-Based-Encryption/tree/master
     number={4},
     pages={469-472},
     doi={10.1109/TIT.1985.1057074}
+}
+
+%   Cryptology course reading material -->
+%%  ecc, plusz bele lett veve az index calculus is ( kesobb...)
+@misc{crypto.ivan.cryptology,
+    author =    {Ivan Damgård},
+    title =     {An Introduction to Cryptography},
+    pages = {123-126},
+    year =      2024
 }
 
 

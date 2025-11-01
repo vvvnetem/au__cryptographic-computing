@@ -9,7 +9,6 @@ Shamir's original motivation for identity-based encryption was to simplify the
 certificate, signing, and key management processes with regards
 for example in a mail system.\cite{BF01}.
 
-%% ttt
 Let's say when \textit{Alice} wants to send  a mail to \textit{Bob} at \url{bob@company.com}
 she simply encrypts her message using the public key string \lstinline{bob@company.com}. 
 In the proposed cryptosystem there is no need for \textit{Alice} to obtain \textit{Bob}’s public key
@@ -33,31 +32,94 @@ Boneh-Frenkel scheme is analogues to the computational Diffie-Hellman assumption
 namely the new system has chosen ciphertext security in the random oracle model\cite{Bellare1993}.
 
 Also the authors showed that in their scheme \textit{PKG}
-can be distributed using standard techniques from treshold cryptography\cite{crypto.seckeydistdl},
-consequently given the \textit{Boneh-Frenkel} based IBE, the
+can be distributed using standard techniques from treshold
+cryptography\cite{crypto.seckeydistdl}, consequently given the
+\textit{Boneh-Frenkel} scheme based IBE, the
 \lstinline{master-key} is never available in a single location.
 
 %% TODO:    itt az implemnetacio-t be kell hivatkozni +
 %%          az architekturat ennek megfeleloen kell oszerakni
-%%          docker-ben. --> lasd
+%%          docker-ben. --> lasd kesobb
 
 
 % Fujisaki-Okamoto [16]
-\subsection{Building blocks for Bonek-Franklin IBE Scheme}
+\subsection{Building blocks for Boneh-Franklin IBE Scheme}
+\label{ssec:ibe.bonehfranklin.scheme}
+
+% Choosing the right Curve families
+
+%% [] <- ehhez meg kell az ETSI is
+%%  TODO: BF01-ben nincs benne, hogy melyik curve-re van illesztve. --> ez appendixbe
+%%  TODO: A valasztott gorbe alapjan kell erre majd a unit teszteket lefuttattni.
+%%      TODO:   Ha van ido, akkor tobb cure parameterrre is ki kell terjeszteni a parameter tesztet.
+
+% Curve
+The following table summarizes some curve families and their repsective parameters
+based on \cite{ecc.fam.param}, (for a detailed summarization regarding elliptic curve theory,
+please refer to \textit{Appendix Section \ref{sec:apx.ecc.curves}})
+
+%% TODO: Ide majd osszefoglalo tabla a valasztott parameterekhez.
+
+% Bilinear mapping Weil pairing
+\subsubsection{Bilinear mapping and Weil pairing}
+
+%% Pairing-based cryptgraphy
+%%% asecuritysite: basics of pairing-cryptography <- using MIRACL
+
+Let $G_1, G_2$ be abelian groups, written additively.
+Now let $G_1$ be a multiplicative cyclic group of oder $n$.
+
+Then, we can write the pairing as follows: $E: G_1 \times G_2 \rightarrow G_t$.
+
+%%%%% Bilinearity cases <- ekvivalens atalakitasok.
+%%%%%   TODO:   Erre kell 1 kulon unit teszt, mutatva, hogy az G_1, G_2-nel fennallnak a relaciok
+%%%%%   TODO:   Itt a jeloles technikat ossze kell hozni a jegyzettel + a videokkal,
+%%%%%           A vegleges jeloles legyen ugyanaz, mint a jegyzetben !
+
+\begin{itemize}
+    \item $e(P, S+T) = e(P,S) e(P(T))$, where $P \in G_1, S,T \in G_2$
+    \item $e(aP, bQ) = e(bP, aQ)$,  where $a,b \in Z_n$ and $P \in G_1$, $Q \in G_2$
+    \item $e(aP, bQ) = e(abP,Q)$,  where $a,b \in Z_n$ and $P \in G_1$, $Q \in G_2$
+    \item $e(aP, bQ) = e(P,Q)^{ab}$,  where $a,b \in Z_n$ and $P \in G_1$, $Q \in G_2$
+    \item $e(-P, Q) = e(P,Q)^{-1} = e(P,-Q)$, where $P \in G_1, Q \in G_2$
+    \item $e(P,0) = e(0, Q) = 1$ , where $P \in G_1, Q \in G_2$
+    \end{itemize}
+
+
+\subsection{Attacker Model}
+
+In comparison to standard models for chosen ciphertext security
+    %% cite: 37, 2
+
+within the Boneh-Franklin scheme the \textit{Adversary}
+is more powerful:
+
+    %%  Az alap tamadasi modell-ben tetszologes meritest vegez az adversary
+    %%  a private kulcsok-ban, majd public key ID-ket tamad
+    %%  Magyaran:   Obtaineli a PKG-tol H(master_key)-t majd a Hash-en
+    %%              collusion-t keres public ID-k alapjan
+    %% A security-t a Dlog assumption adja:
+    %%  G1 gorbe-n leve S(ecret) pont es
+    %%  G2 gorbe-n levo P(ublic) pont-kat feleltessuk meg
+    %%  G3(U,V)-ra projektalt gorbenkbol.
+
+    Firstly, the attacker is allowed to attack any arbitrary \textit{public key ID}
+    Secondly, while mounting  the choosen ciphertext attack on the \textit{ID}
+    the attacker is allowed to obtain any private keys corresponding to some
+    identites other than the private key for \textit{ID}. The last
+    condition is equivalent to the case where the attacker obtains a number
+    of private keys corresponding to some identites, than it tries to attack
+    some other \textit{public key ID}.
+
+    %%  Ez lemodellezheto egyszeruen halozat nelkul is:
+    %%      ./volume-ra legyen kiirva 1 file-ba 1 rakas privatekulcs
+    %%      Eve ferjen hozza a ./volume-n tarolt file-hoz es futtasson tesztet
+    %%      ezek alapjan a kulcsok alapjan.
+    %%      Ha lesz collision H(pub_key) H(lopott_priv_key) kozott akkor nyer.
 
 
 
 
-
-
-
-%% Compare Boneh-Franklink scheme with other soulions --> lasd az /arch
-%% fejezetet bovebben
-\subsubsection{Improvements compared to previous IBE implementations}
-%% todo: ide a kesobbi varians + nehany hatrany,
-%% Revocation, Key escrow, ID is public
-Also note that key escrow is inherent in identity-based
-e-mail systems: the PKG knows Bob’s private key.
 
 
 % --------------------------------------
