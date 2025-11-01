@@ -1,7 +1,7 @@
 # Secure Two-Party Blood Type Compatibility (d-Homomorphic Encryption)
 
 The project demonstrates a secure two-party computation (2PC) protocol for blood-type compatibility
-using a toy d-Homomorphic Encryption (d-HE) scheme inspired by lecture notes and [vDGHV].
+using d-Homomorphic Encryption (d-HE) scheme inspired by lecture notes and [vDGHV].
 
 The computation allows Alice (the recipient) and Bob (the donor) to jointly compute blood-type
 compatibility without revealing their private inputs.
