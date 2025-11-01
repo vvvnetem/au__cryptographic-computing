@@ -1,81 +1,81 @@
-import java.util.Objects;
+import java.security.SecureRandom;
 
 /**
- * Alice: generates Paillier keys, encrypts her recipient bits and a small
- * collection of precomputed encrypted masks that Bob will need.
- *
- * Alice sends the payload (all ciphertexts) to Bob.
+ * Alice: generates keys and encrypts her recipient bits (3 bits).
+ * She chooses subset size sSize for encrypting each bit (controls noise).
  */
 public class Alice {
-    private final Paillier.KeyPair kp;
+    private final DHE.KeyPair kp;
+    private final SecureRandom rnd = new SecureRandom();
+    private final int sSize; // subset size used for encryption
 
-    public Alice(int keyBits) {
-        this.kp = Paillier.keyGen(keyBits);
+    private static final boolean DEBUG = true;  // Add debug flag
+
+    /**
+     * Construct Alice and generate keys.
+     * We pick parameters that allow depth-3 circuits (example choice).
+     */
+    public Alice() {
+        // Parameter choices (tuned for modest demo):
+        // pBits ~ 512, qBits ~ 128, rBits ~ 20, n ~ 1024
+        int pBits = 1024; // Noise miatt A-, AB- 0 instead of 1.; 512 -> 1024
+        int qBits = 128;
+        int rBits = 16; // r_i \approx  2^20; to be between 16 and 32
+        int numPublicElements = 1024;
+        this.kp = DHE.keyGen(pBits, qBits, rBits, numPublicElements, rnd);
+
+        // subset size for encryption: small-ish to keep noise small but enough for security
+        this.sSize = Math.max(8, numPublicElements / 16); // e.g., n/16 ~ 64
     }
 
-    public Paillier.KeyPair getKeyPair() { return kp; }
+    public DHE.KeyPair getKeyPair() { return kp; }
 
-    // encrypt a single bit (0/1)
-    public Paillier.Ciphertext encryptBit(int bit) {
-        return Paillier.encryptInt(bit, kp.getPublic());
+    /** Encrypt a single bit (0/1) using chosen subset size. */
+    public DHE.Ciphertext encryptBit(int bit) {
+        DHE.Ciphertext ct = DHE.encryptBit(bit, kp.getPublic(), rnd, sSize);
+        if (DEBUG) {
+            System.out.printf(
+                    "[Alice] Encrypt bit=%d | subsetSize=%d | initialNoise≈%d | level=%d%n",
+                    bit, sSize, ct.noiseBound, ct.level
+            );
+        }
+        return ct;
     }
 
-    // Prepare and return a payload containing all encrypted recipient values Bob needs.
-    // recipient is index 0..7 (bits as LSB-first: bit0=Rh, bit1=B, bit2=A)
-    public RecipientPayload prepareRecipientPayload(int recipientIndex) {
-        int r0 = (recipientIndex >> 0) & 1; // Rh
-        int r1 = (recipientIndex >> 1) & 1; // B
-        int r2 = (recipientIndex >> 2) & 1; // A
-
-        // Basic encrypted bits
-        Paillier.Ciphertext encRh = encryptBit(r0);
-        Paillier.Ciphertext encB  = encryptBit(r1);
-        Paillier.Ciphertext encA  = encryptBit(r2);
-        Paillier.Ciphertext encOne = encryptBit(1);
-        Paillier.Ciphertext encZero = encryptBit(0);
-
-        // Derived plaintexts Alice can compute
-        int rAB = (r2 & r1);              // A & B
-        int rA_rh = (r2 & r0);            // A & Rh
-        int rB_rh = (r1 & r0);            // B & Rh
-        int rAB_rh = (rAB & r0);          // AB & Rh
-
-        Paillier.Ciphertext encAB     = encryptBit(rAB);
-        Paillier.Ciphertext encA_rh   = encryptBit(rA_rh);
-        Paillier.Ciphertext encB_rh   = encryptBit(rB_rh);
-        Paillier.Ciphertext encAB_rh  = encryptBit(rAB_rh);
-
-        return new RecipientPayload(
-                encOne, encZero,
-                encA, encB, encAB,
-                encRh, encA_rh, encB_rh, encAB_rh
-        );
+    /** Encrypt the 3-bit blood type (LSB first): bit0=Rh, bit1=B, bit2=A */
+    public DHE.Ciphertext[] encryptBloodType(int type) {
+        DHE.Ciphertext[] c = new DHE.Ciphertext[3];
+        for (int i = 0; i < 3; i++) {
+            int bit = (type >> i) & 1;
+            c[i] = encryptBit(bit);
+        }
+        return c;
     }
 
-    // Small container class with all ciphertexts Bob needs
+    /** Decrypt single ciphertext to 0/1. */
+    public int decrypt(DHE.Ciphertext ct) {
+        int result = DHE.decrypt(ct, kp.getPrivate());
+        if (DEBUG) {
+            System.out.printf("[Alice] Decrypt result = %d%n", result);
+        }
+        return result;
+    }
+    /** Recipient payload: simply the encrypted bits (we send all three ciphertexts). */
     public static final class RecipientPayload {
-        public final Paillier.Ciphertext encOne;
-        public final Paillier.Ciphertext encZero;
-        public final Paillier.Ciphertext encA;
-        public final Paillier.Ciphertext encB;
-        public final Paillier.Ciphertext encAB;
-        public final Paillier.Ciphertext encRh;
-        public final Paillier.Ciphertext encA_rh;
-        public final Paillier.Ciphertext encB_rh;
-        public final Paillier.Ciphertext encAB_rh;
-
-        public RecipientPayload(Paillier.Ciphertext encOne, Paillier.Ciphertext encZero,
-                                Paillier.Ciphertext encA, Paillier.Ciphertext encB, Paillier.Ciphertext encAB,
-                                Paillier.Ciphertext encRh, Paillier.Ciphertext encA_rh, Paillier.Ciphertext encB_rh, Paillier.Ciphertext encAB_rh) {
-            this.encOne = Objects.requireNonNull(encOne);
-            this.encZero = Objects.requireNonNull(encZero);
-            this.encA = encA; this.encB = encB; this.encAB = encAB;
-            this.encRh = encRh; this.encA_rh = encA_rh; this.encB_rh = encB_rh; this.encAB_rh = encAB_rh;
+        public final DHE.Ciphertext encRh;
+        public final DHE.Ciphertext encB;
+        public final DHE.Ciphertext encA;
+        public RecipientPayload(DHE.Ciphertext encRh, DHE.Ciphertext encB, DHE.Ciphertext encA) {
+            this.encRh = encRh; this.encB = encB; this.encA = encA;
         }
     }
 
-    // Alice decrypts final result (single ciphertext -> int 0/1)
-    public int decrypt(Paillier.Ciphertext ct) {
-        return Paillier.decrypt(ct, kp).intValue();
+    /** Prepare the small payload to send to Bob (encrypts each recipient bit). */
+    public RecipientPayload prepareRecipientPayload(int recipientIndex) {
+        DHE.Ciphertext encRh = encryptBit((recipientIndex >> 0) & 1);
+        DHE.Ciphertext encB  = encryptBit((recipientIndex >> 1) & 1);
+        DHE.Ciphertext encA  = encryptBit((recipientIndex >> 2) & 1);
+        return new RecipientPayload(encRh, encB, encA);
     }
+
 }
