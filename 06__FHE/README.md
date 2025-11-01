@@ -1,4 +1,4 @@
-# Secure Two-Party Blood Type Compatibility (Paillier-based Homomorphic Encryption)
+# Secure Two-Party Blood Type Compatibility (d-Homomorphic Encryption)
 
 The project demonstrates a secure two-party computation (2PC) protocol for blood-type compatibility
 using the Paillier cryptosystem with respect to additive homomorphism.
