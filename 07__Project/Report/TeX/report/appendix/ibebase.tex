@@ -1,0 +1,35 @@
+%% Theoretical background for IBE (Boneh-Franklin scheme )
+
+An identity-based encryption scheme $\varepsilon$ is defined formally
+by four randomized algorithms: \lstinline{Setup}, \lstinline{Extract},
+\lstinline{Encrypt} and \lstinline{Decrypt} as follows:
+
+\begin{itemize}
+    \item[] \textbf{Setup:} Takes $k$ security parameter as input, and outputs the \lstinline{params} system parameters and \lstinline{master-key}.
+            The \lstinline{params} system parameters describes the finite message space
+            \mathcal{M} and the finite ciphertextt space \mathcal{C}.
+            In addition, the \lstinline{params} system parameters are publicly known,
+            while the \lstinline{master-key} will be known only for the Private Key Generator (PKG).
+            (For the special case, where one party member is also the PKG refer to \textit{Section \ref{ssec.scenario.delegation}} )
+
+    \item[] \textbf{Extract:} Takes \lstinline{params}, \lstinline{master-key} and an arbitrary $\mathrm{ID} \in \{0,1\}^*$ as input,
+            and outputs $d$ private key. $\mathrm{ID}$ is and arbitrary string that corresponds to the private key $d$
+            In addition, the \lstinline{Extract} algorithm extracts the privatte key from the given public key.
+
+    \item[] \textbf{Encrypt:} The \lstinline{Encrypt} algoritm takes \lstinline{params}, $\mathrm{ID}$ and $M \in \mathcal{M}$ as input,
+            and outputs $C \in \mathcal{C}$.
+    \item[] \textbf{Decrypt:} The The \lstinline{Decrypt} algoritm takes \lstinline{params} and private key $d$ and $C \in \mathcal{C}$ as input,
+    and outputs $M \in \mathcal{M}$.
+\end{itemize}
+
+The standards consistency check for the outlined algorithms can be
+summarized as follows:
+
+% TODO: Unit test az osszes elofordulo esetre --> bilinear mapping
+\begin{equation*}
+\forall M \in \mathcal{M}: \mathrm{Decrypt}(\mathrm{params}, \mathrm{Encrypt}(\mathrm{params}, \mathrm{ID}, M),d)
+\end{equation*}
+
+There are two system properties that we should take into consideration for
+the public key encryption scheme. The standard acceptable notion for security
+is \textit{chosen ciphertext security} (denoted as \textit{IND-CCA} furthermore)
