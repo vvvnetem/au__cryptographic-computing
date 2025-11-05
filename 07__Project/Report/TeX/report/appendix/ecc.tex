@@ -4,7 +4,7 @@
 \section{Basics for Elliptic Curve Theory}
 \label{sec:apx.ecc.curves}
 
-% 2 curve csalad:
+% curve csalad: BN
 An elliptic curve is the set of solutions to the \textit{Weierstrass form}
 \textit{equation \ref{eq:ecc.weierstrass}} with respect to
 $(x,y) \in \mathcal{F}_{q^m} \times \mathcal{F}_{q^m}$.\cite{ecc.fam.param}
@@ -67,7 +67,7 @@ addmissible biilinear map if \textit{bilinearity} and
         % Azonossagok:
         \item[] $e(aV, bW) = e(V, W)^{ab} = e(abV, W) = e(V, abW) = e(bV, aW)$
         \end{itemize}
-    \item[] \textbf{Non-degeneracy:} $e(P,Q) \neq 1_{\mathcal{G}_T}$, 
+    \item[] \textbf{Non-degeneracy:} $e(P,Q) \neq 1_{\mathcal{G}_T}$,
     \end{itemize}
 
 % Properties of general pairings
@@ -93,6 +93,47 @@ the problem into the $\mathcal{F}_{p^k}$ ﬁeld is useless for an attacker.
 As for super-singular curves that the $k$ embedding degree
 is small, but on the other hand, If we choose the curves large enough,
 discrete log will still be hard despite the attacks.\cite{crypto.ivan.cryptology}
+
+Additionally, when generating curves we also have to be cautious about the $\mathcal{G}_i$ relations.
+In case $\mathcal{G}_1 = \mathcal{G}_2$ the pairing is symmetric (also called \textit{Type-1} curves)
+and defined over a supersingular curve with $\psi$ distorsion map
+as can be seen in \textit{Equation \ref{eq:ecc.supersingularmapping}}\cite{ecc.fam.param}:
+
+\begin{equation}
+    \label{eq:ecc.supersingularmapping}
+        \psi : E(\mathcal{F}_q[r] \rightarrow E(\mathcal{F}_q^k[r])
+\end{equation}
+
+With assymetric (also called \textit{Type-3} curves )
+$\mathcal{G}_1 \neq \mathcal{G}_2$, and $\mathcal{G}_2$ is chosen
+as the group of points in the twist that is isomorphic to a subgroup
+of $E(\mathcal{F}_q^k[r])$. In the latter case there is no efficient
+map $\psi : \mathcal{G}_2 \rightarrow \mathcal{G}_1$. \cite{ecc.fam.param}
+%%  In case of Supersingular curves with
+%%  characteristics q=2,3 are broken [Barbulescu et al. 2014]
+
+\subsubsection{Security of pairings}
+\label{ssec:apx.ecc.curves.pairings.security}
+
+% TODO: Jegyzetbeli jelolesekkel osszeegyeztetni
+% The general pairing can be written:   e: G_1 x G_2 -> G_T
+% DLP:      Discrete Log Problem
+% CDHP:     Computational Diffe-Hellman Problem
+% ECDLP:    Elliptic Curve Discrete Logarithm Problem
+% BCDHP:    Bilinear Computational Diffie-Hellman Problem
+% ------
+
+Security requirements and considerations for $e: \mathcal{G}_1 \times \mathcal{G}_2 \rightarrow \mathcal{G}_T$ pairings \cite{ecc.fam.param}:
+
+\begin{itemize}
+    \item \textit{(EC)DLP} problem must be hard in $\mathcal{G}_1, \mathcal{G}_2$ and $\mathcal{G}_T$.
+    \item Hardness of $\mathcal{G}_T$ is given by $k \cdot \lvert q \rvert$
+    \item Parameters in $\mathcal{G}_1, \mathcal{G}_2$ should be large enough.
+    \item $\rho$ describes the balance between $r,q$ parameters: $\rho = \frac{\mathrm{log} q}{\mathrm{log} r}$. ($\rho = 1$ is optimal)
+    \item Choosing the right $k$ parameter in our case is based on standards.
+    \item Building and compute map $e$ (based on library !!)
+\end{itemize}
+
 
 
 

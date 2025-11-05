@@ -41,8 +41,9 @@ cryptography\cite{crypto.seckeydistdl}, consequently given the
 %%          az architekturat ennek megfeleloen kell oszerakni
 %%          docker-ben. --> lasd kesobb
 
-
 % Fujisaki-Okamoto [16]
+
+%% TODO:    Detailed building blokk --> /appendix/{}
 \subsection{Building blocks for Boneh-Franklin IBE Scheme}
 \label{ssec:ibe.bonehfranklin.scheme}
 
@@ -59,6 +60,73 @@ based on \cite{ecc.fam.param}, (for a detailed summarization regarding elliptic 
 please refer to \textit{Appendix Section \ref{sec:apx.ecc.curves}})
 
 %% TODO: Ide majd osszefoglalo tabla a valasztott parameterekhez.
+
+% =======================================
+% Curve paremeters (\cite{ecc.fam.param})
+%% TODO: safe_curve_parameters from \cite{ecc.sec.param}
+
+% k := embedding degree
+% \rho = balance (\rho = 1 is the optimal)
+% (prime) p(x) :=
+% (prime) r(x) :=
+% t(x) :=
+% r := curve order
+% ---
+
+% BN (Barreto-Naehrig) curves (used to be optimal at the 128-bit security level):
+% k = 12,
+% \rho \approx 1
+% p(x) = 36x^4 + 36x^3 + 24x^2 + 6x + 1
+% r(x) = 36x^4 + 36x^3 + 24x^2 + 6x + 1
+% t(x) = 6z^2 + 1
+
+% BLS12 curves:
+% k = 12
+% \rho \approx 1.5
+% p(x) = (x-1)^2 (x^4 - x^2 +1)/3+x
+% r(x) = x^4 - x^2 +1
+% t(x) = x + 1
+
+% BLS24 curves:
+% k = 24
+% \rho \approx 1.25
+% p(x) = (x - 1)^2 (x^8 - x^4 +1)/3+x
+% r(x) = x^8 -x^4 +1
+% t(x) = x+1
+
+% KSS18 curves:
+% k = 18
+% \rho \approx 4/3
+% p(x) = (x^8 + 5x^7 + 7x^6+37x^5+188x^4 + 259 x^3 + 343 x^2 + 1763 x + 2401)/21
+% r(x) = (x^6 + 37 x^3 + 343)/343
+% t(x) = (x ^4 + 16z +7)/7
+
+% ...
+
+%% Weil pairing
+Let  $\mathfrak{P} = (P) - (\infty)$ and $\mathfrak{Q} = (Q) - (\infty)$
+be the divisors respectively, then for \textit{ Weil pairing}
+the map is follows\cite{ecc.fam.param}:
+
+%%% Consequently, functions can be evaulatiod over points istead of divisors:
+\[
+    \begin{matrix}
+        w & : & E(\mathcal{F}_q)[r]  \times E(\mathcal{F}_{q^k})[r] \rightarrow \mathcal{F}^{*}_{q^k}  \\
+        w_r(P, Q) & = & (-1)^r \frac{f_{r,P}(\mathfrak{Q}))}{f_{r,Q}(\mathfrak{P})}
+    \end{matrix}
+
+\]
+%%%% -> RELIC: UNICAMP, flexible and state-of-the-art.
+
+
+
+% =======================================
+
+
+
+
+
+
 
 % Bilinear mapping Weil pairing
 \subsubsection{Bilinear mapping and Weil pairing}
@@ -84,6 +152,36 @@ Then, we can write the pairing as follows: $E: G_1 \times G_2 \rightarrow G_t$.
     \item $e(-P, Q) = e(P,Q)^{-1} = e(P,-Q)$, where $P \in G_1, Q \in G_2$
     \item $e(P,0) = e(0, Q) = 1$ , where $P \in G_1, Q \in G_2$
     \end{itemize}
+
+% TODO: Alap implementaciohoz: 1 hoston minden.
+% TODO: A jeloleseket
+\subsection{IBE Boneh Franklin scheme (simplified)}
+
+Overview IBE Boneh-Franklin scheme based on \cite{ecc.fam.param}
+%% Jelolesek
+\begin{itemize}
+    \item \textbf{Initialization phase:}
+    \item   \begin{enumerate}
+                \item \textit{PKG} generates $\textit{master-key}$ $s\in \mathcal{Z}^{*}_{r}$ and computes public key $P_{pub} = sP$
+                \item Fix hash functions as follows: $H_1: \{ 0,1 \}^* \rightarrow \{ \mathcal{G}_1\}$ and $H_2: \{ \mathcal{G}_T\} \rightarrow \{0,1\}^m$
+            \end{enumerate}
+    \item \textbf{Key generation phase:}
+    \item   \begin{enumerate}
+                \item User with identity $ID_i$ computes $P_i$ public key as: $P_i = H_1(ID_i)$
+                \item \textit{PKG} generates private key $S_i = sP_i$
+    \end{enumerate}
+    \item \textbf{Encryption phase:}
+    \item   \begin{enumerate}
+                \item To encrypt $m$, \textit{Bob} selects randomly $l$ and computes $R=lP$ and $c$ ciphertext:
+                \begin{equation*} c = m \oplus H_2(e(P_A, P_{pub})^l ) \end{equation*}
+                \item \textit{Bob} sends $(R,c)$ to \textit{Alice}.
+    \end{enumerate}
+    \item \textbf{Decryption phase:}
+    \item   \begin{enumerate}
+                \item \textit{Alice} uses her own $S_A$ private key to compute $m$ as:
+                \begin{eqnarray*} c \oplus H_2(e(S_A, R)) = c \oplus H_2(e(sP_A, lP)) = c \oplus H_2(e(P_A, P_{pub})^l)=m  \end{eqnarray*}
+    \end{enumerate}
+\end{itemize}
 
 
 \subsection{Attacker Model}
