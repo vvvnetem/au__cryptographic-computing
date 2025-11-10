@@ -1,0 +1,51 @@
+[1. Project_Konzultacio]
+
+	%%% HANGSULYOS__PONTOK:
+
+	%%%%
+	%%%% 1. group-ok megvalasztasa,
+
+
+
+	%%%% 2. hashing into groups
+
+    %%% hashing into groups     <- rejection mapping <- H(pubkey) --> point <<-  HANGSULYOS_PONT
+    %%%% ide: RELIC-en belul implementalva van blake TODO:
+        %%%% https://tools.ietf.org/id/draft-irtf-cfrg-hash-to-curve-06.html
+        %%%% https://datatracker.ietf.org/doc/id/draft-irtf-cfrg-hash-to-curve-06.html
+
+    %%% ate and tate paiirng is hasznalhato nem kell szigoruan a eil pairinghez -->
+        %%% a vegleges projektet at lehet nevezni pl. IBE with Pairings ( ATE, TATE )
+
+        %%% Implementaciohoz: RELIC + JNI ( a regi papirbol csak az alapotletet kell hasznanli, ami uj papir bejott
+                                            %%% az alapjan kell menni )
+
+        %%% Masik info: Ha a curve-el kapcsolatban van kerdes meglehet kerdezni Diego-t,
+        %%%             csak be kell CC-zni Claudio-t. ==> JNI-n keresztul lesz meghivva RELIC-bol
+        %%%             ide kell mindenkeppen kell kerdes
+        %%%                 ==> Bovebben lasd a $TARGET_CURVE
+
+    %%% notation -> flexible
+        %%% TODO: A jeloles legyen egyseges, el kell donteni, hogy (~additive, etc):
+            %%%% [https://www.herongyang.com/EC-Cryptography/Group-Additive-Notation-of-Abelian-Group.html]
+
+
+        %%% insttead of proofs --> try came out ideas ho to break the protocol
+        %%% A proof-ok helyett belehet venni mas temat is.
+
+        %%% Ami meg lenyeges volt a CPA security <- amit ki lehet hangsulyozni meg.
+            %%% TODO: [https://csrc.nist.gov/csrc/media/Presentations/2023/stppa5-ibe/images-media/20230209-stppa5-Dan-Boneh--IBE.pdf]
+        %%% Masik: A tanrgy multi-party comprol szol, emlitettuk a shared secret key DKP generationt.
+                    %%% <- elmeleti alaphoz: https://www.youtube.com/watch?v=5tDp_-Nf7nU
+        %%%% Ezt viszont bele kell venni. Legalabb alapszintten
+
+        %%% Masik: A tablan varjak, hogy az ember vezzese le ha kell amit lehet, mint vizsgan.
+        %%% Masik: Felmerult 1 otlet (ha keszen van a full implementacio)
+        %%%%    Backdoored trapdoor function: DKG generalja le a sk privat kulcsot, de mivan ha a trapdoor function (hash)
+           %%%% szandekosan szarul van implementalva.
+           %%%% Kondicio: Ne legyen eszreveheto
+            %%%%        pl: bovebben: https://eipsi.win.tue.nl/surveillance/yung.pdf
+
+        %%% Masik:  A docker megvalositast nem kell vinni, mert itt nem ezen van a lenyeg, helyettte: treshold secret sharing
+        %%%     INFO: Itt ami a lenyeg, hogy random oracle nelkul, trapdoor function
+
