@@ -33,6 +33,9 @@ build/
 
 # --- custom
 *.ack
+*.ack00
+*.ack99
+*.bck
 
 # =========================
 # Eclipse
