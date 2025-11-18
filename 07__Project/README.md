@@ -194,6 +194,6 @@ See Report section: _null_
 
 See Report section: _null_
 
-### Multi-party Computation vs. Distributed Key Protocol
+### Shamir's Secret Sharing + Pedersen's VSS vs. Distributed Key Protocol
 
 See Report section: _null_
