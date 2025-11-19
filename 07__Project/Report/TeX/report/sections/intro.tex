@@ -56,10 +56,26 @@ cryptography\cite{crypto.seckeydistdl}, consequently given the
 
 % Curve
 The following table summarizes some curve families and their repsective parameters
-based on \cite{ecc.fam.param}, (for a detailed summarization regarding elliptic curve theory,
-please refer to \textit{Appendix Section \ref{sec:apx.ecc.curves}})
+based on \cite{ecc.fam.param}  with regard to \textit{pairing-friendly elliptic curves}\cite{ecc.pairings.param}
+(for a detailed summarization regarding elliptic curve theory,
+please refer to \textit{Appendix Sections
+\ref{sec:apx.ecc.curves}} and \textit{\ref{sec:apx.ecc.curves.pairing}})
 
-%% TODO: Ide majd osszefoglalo tabla a valasztott parameterekhez.
+%
+\begin{table}[h!]
+\centering
+ \begin{tabular}{||c c c c||}
+ \hline
+ Col1 & Col2 & Col2 & Col3 \\ [0.5ex]
+ \hline\hline
+ 1 & 6 & 87837 & 787 \\
+ 2 & 7 & 78 & 5415 \\
+ 3 & 545 & 778 & 7507 \\
+ 4 & 545 & 18744 & 7560 \\
+ 5 & 88 & 788 & 6344 \\ [1ex]
+ \hline
+ \end{tabular}
+\end{table}
 
 % =======================================
 % Curve paremeters (\cite{ecc.fam.param})
@@ -99,9 +115,15 @@ please refer to \textit{Appendix Section \ref{sec:apx.ecc.curves}})
 % \rho \approx 4/3
 % p(x) = (x^8 + 5x^7 + 7x^6+37x^5+188x^4 + 259 x^3 + 343 x^2 + 1763 x + 2401)/21
 % r(x) = (x^6 + 37 x^3 + 343)/343
-% t(x) = (x ^4 + 16z +7)/7
+% t(x) = (x ^4 + 16x +7)/7
 
 % ...
+
+
+
+
+
+
 
 %% Weil pairing
 Let  $\mathfrak{P} = (P) - (\infty)$ and $\mathfrak{Q} = (Q) - (\infty)$

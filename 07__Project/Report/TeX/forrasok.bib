@@ -131,15 +131,44 @@ signing Efficient Protocols},
     pages        = {62-73}
 }
 
-
 %%% ............................................
 
 % Implementacio specific
 % -------------------------------------
 
-% IBE with ECC
+    % RELIC <- ECC, pairings
+    %% x64-pbc-bn254
+    %x64-pbc-bn382
+    %x64-pbc-bn446
+@misc{relic-toolkit,
+    author = {D. F. Aranha and C. P. L. Gouvêa and T. Markmann and R. S. Wahby and K. Liao},
+    title = {{RELIC is an Efficient LIbrary for Cryptography}},
+    howpublished = {\url{https://github.com/relic-toolkit/relic}},
+}
 
-https://github.com/peeyushy95/Identity-Based-Encryption/tree/master
+    % Optimal ATE pairing:
+    %% https://eprint.iacr.org/2010/526.pdf
+
+    %% TODO: Curve database for parameters:
+    %%% https://std.neuromancer.sk/bn/bn638
+
+% IBE with ECC
+%% https://github.com/peeyushy95/Identity-Based-Encryption/tree/master
+
+%% jPBC (Java Pairing Based Cryotigrohy)
+@INPROCEEDINGS{ecc.pairing.implement,
+    author={De Caro, Angelo and Iovino, Vincenzo},
+    booktitle={2011 IEEE Symposium on Computers and Communications (ISCC)},
+    title={jPBC: Java pairing based cryptography},
+    year={2011},
+    volume={},
+    number={},
+    pages={850-855},
+    keywords={Libraries;Cryptography;Java;Benchmark testing;Elliptic curves;Mobile communication;Zirconium;pairing-based cryptography;Java},
+    doi={10.1109/ISCC.2011.5983948}}
+
+%% Pairing Friendly Curve:
+    %% https://www.ietf.org/archive/id/draft-irtf-cfrg-pairing-friendly-curves-08.html
 
 
 %% asecurity site IBE
@@ -153,9 +182,6 @@ https://github.com/peeyushy95/Identity-Based-Encryption/tree/master
     howpublished={\url{https://asecuritysite.com/encryption/ibe}}
 }
 
-%% Safe curve paramteres
-    %%% https://safecurves.cr.yp.to/field.html
-    %%%
 
 
 % IBE architecture design, standards
@@ -189,9 +215,6 @@ https://github.com/peeyushy95/Identity-Based-Encryption/tree/master
 %https://stackoverflow.com/questions/46663/how-can-i-send-an-email-by-java-application-using-gmail-%yahoo-or-hotmail
 %https://commons.apache.org/proper/commons-email/
 
-
-
-
 % Cryptographic
 % -------------------------------------
 
@@ -212,7 +235,6 @@ https://github.com/peeyushy95/Identity-Based-Encryption/tree/master
     pages="295--310",
     isbn="978-3-540-48910-8"
 }
-
 
     %% TODO: Secret sharing for treshold cryptography
     %%% https://csrc.nist.rip/Projects/threshold-cryptography
@@ -243,6 +265,30 @@ https://github.com/peeyushy95/Identity-Based-Encryption/tree/master
 % https://course1.winona.edu/eerrthum/Papers/WeilVsTate.pdf
 %% https://crypto.stanford.edu/pbc/notes/ep/tate.html
 
+% Implementing Pairing with Pairing-friendly curves <- BN curve
+@inproceedings{ecc.pairings.param,
+    author = {Aranha, Diego and Fuentes-Castañeda, Laura and Knapp, Edward and Menezes, Alfred and Rodríiguez-Henríquez, F},
+    year = {2013},
+    month = {01},
+    pages = {177-195},
+    title = {Implementing Pairings at the 192-Bit Security Level},
+    isbn = {978-3-642-36333-7},
+    doi = {10.1007/978-3-642-36334-4_11}
+}
+
+    % TODO: Add to .bib
+%[1] Aranha, D., Karabina, K., Longa, P., Gebotys, C., Rodriguez-Henriquez, F. and J. Lopez, "Faster Explicit Formulas for Computing Pairings over Ordinary Curves", Proceedings Lecture notes in computer sciences; EUROCRYPT --EUROCRYPT2011, 2011. [paper]
+%[2] Barreto, P. S., & Naehrig, M. (2005, August). Pairing-friendly elliptic curves of prime order. In International workshop on selected areas in cryptography (pp. 319-331). Springer, Berlin, Heidelberg. [paper]
+
+    % ECC: Implementing pairings in software.
+@online{ecc.fam.param.pair,
+    title = { Implement all the pairings in software!},
+    author = { Diego F. Aranha },
+    year = {2017},
+    note = {[Online; accessed 05. Nov. 2025]},
+    url = {https://caramba.inria.fr/sem-slides/201905241000.pdf}
+}
+
 %% Elliptic curve arithmetics
 
 %%% Choosing Elliptic curve family and curve parameters for BF based IBE
@@ -263,6 +309,22 @@ https://github.com/peeyushy95/Identity-Based-Encryption/tree/master
     note = {[Online; accessed 25. Oct. 2025]},
     url = {https://safecurves.cr.yp.to/index.html}
 }
+    %% TODO: safecurves eprint
+    %%% https://eprint.iacr.org/2024/1265.pdf
+
+    % osszefoglalo tabla standard-ok alapjan:
+    %%     %%% Altalanos m/2 okolszabaly: pl. ECC 1024bit key size ~ 512 bit symmetric key size
+%    %%%% TODO: lasd a parameter justification-t kesobb
+    % + bovebben: https://datatracker.ietf.org/doc/rfc4492/
+
+@online{ecc.sec.param.summ2012,
+    title = { Yearly Report on Algorithms and Keysizes },
+    author = { ECRYPT},
+    year = {2012},
+    note = {[Online; accessed 25. Oct. 2025]},
+    url = {https://cordis.europa.eu/docs/projects/cnect/6/216676/080/deliverables/002-DSPA20.pdf}
+}
+
 
 
 %%% TODO
@@ -274,7 +336,6 @@ https://github.com/peeyushy95/Identity-Based-Encryption/tree/master
 
 % Identity Based Encryption
 % -------------------------------------
-
 
 % IBE IETF standard beli valtozata
     % TODO: https://www.ietf.org/rfc/rfc5091
@@ -338,7 +399,6 @@ https://github.com/peeyushy95/Identity-Based-Encryption/tree/master
     URL = {https://doi.org/10.1137/S0097539701398521},
     eprint = {https://doi.org/10.1137/S0097539701398521}
 }
-
 
 % Computational vs. Decisional Diffie-Hellman
 @article{crypto.cdhddh,

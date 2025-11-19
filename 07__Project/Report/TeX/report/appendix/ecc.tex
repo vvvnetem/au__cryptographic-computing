@@ -134,10 +134,78 @@ Security requirements and considerations for $e: \mathcal{G}_1 \times \mathcal{G
     \item Building and compute map $e$ (based on library !!)
 \end{itemize}
 
+% Osszefoglalo tabla-hoz elmeleti magyarazat
+%%
+%% INFO:    Az alap jegyzetek 128bit-es kulcs terre vannak/lettek irva
+%%          Erdemes minimum 192bit-es kulcsterben (key_size) gondolkodni, hogy
+%%          Osszevetheto legyen a state-of-the-art modszerekkel.
+%%
+%%          Bovebben:   Lasd az ekvivalencia tablazatot az EC/Symmetric key_size-ra
+%%                      vonatkozoan !
 
+% INFO: A hattere G_1 \times G_2 -> G_T mappingnak
+\subsubsection{Pairing-friendly elliptic curves}
+\label{sec:apx.ecc.curves.pairing}
 
+Let $p$ be a prime and $E$ be the elliptic curve
+defined over $\mathcal{F}_p$ finite field.
 
+% Magyaran a lenyeg:
+%% Ahhoz, hogy a csavaras (twist), osszeadas, duplazas, stb.
+%% muveleteket le tuddjuk jatszani a mezo felett kell 1 specialis mapping.
+%% Ez a specialis mapping a Frobenius endomorphism ami nem geometriai object-en act-el
+%% hanem algebai muveleteken/objecteken pl. gyurun, mapping-on. --> TODO: lasd a Cathegory Theory-t
+%%% Meg Rovidebben: A mi esettunkben a Mapping Analogia ugyanaz mint a "kernel-trick":
+%%%     \phi : [X^p_1 ... X^_p_n] p_1-ik hatvanybol p_n-ik hatvanyba mappolunk
+%%%      ahol p_1 << p_n
+
+Let $r$ be a prime with $r \mid \# E(\mathcal{F}_p)$ and $gcd(r,p)=1$.
+Then the cofactor is $\rho = \frac{\mathrm{log} p}{\mathrm{log} q}$.
+Let $k$ be the \textit{embeddding degree}, which $k$ is the smallest positive integer
+with $r | (p^k -1)$. Let $\Pi: (x,y) \rightarrow  (x^p,y^p) $ be the $p$-th
+power \textit{Frobenius} endomorphism. The trace of the \textit{Frobenious} is
+$t = p+1 - \#E\mathcal{F}_p)$.\cite{ecc.pairings.param}
+
+% Magyaran:
+%% Az abstract magasabb dimenziobol
+%% leprojektaljuk az alacsonyabba es vica-versa.
+
+%   A Frobenious endomorfizmus nelkul nem lenne egyertelmu, ha megcsavarjuk az ECC-t
+%%  akkor melyik "oldalat" latjuk a csavart abasztract vaszonnak.
+%%  Vaszon := p-ik kitevovel megegyezo absztrakt reteg a mezo felett, amire esik
+%%  a projekcio arnyeka
+
+Then $\mathcal{G}_1$ can be rewritten as the 1-eigenspace of $\Pi$ acting
+on $E[r]$ as follows: $\mathcal{G}_1 = \{ P \in E[r]: \Pi(P) = P\} = E(\mathcal{F}_p)[r]$.
+Also let $d$ be the order of the automorphism group of $E$ in a way that $d | k$ also holds.\cite{ecc.pairings.param}
+
+%% INFO: Reasoning about why this pairing is working <- ez appendix-be benne maradhat
+%% INFO: A valasztott curve csalad attributumai + ez teszi lehetove, hogy a G1 es G2 gorbeken
+%% levo csavarodasokat (ha vannak) tudjuk projektalni G_T -re
+
+Let $e = k/d$ and $q=p^e$. Then the unique degree-$d$ twist (denoted as $\tilde{E}$) of $E$ over
+$\mathcal{F}_q$ has the property of $r | \# \tilde{E} (\mathcal{F}_q)$. The associated
+twising isomorphism can be described as $\Psi: \tilde{E} \rightarrow E$. Let $\tilde{Q} \in \tilde{E}(\mathcal{F}_q)$
+be the point of order $r$ then $Q = \Psi (\tilde{Q}) \notin E(\mathcal{F}_p)$. Then we
+can view $\mathcal{G}_2$ as the $p$-eigenspace of $\Pi$ acting on $E[r]$, written as
+$\mathcal{G}_2 = \left< Q \right>$. Finally, $\mathcal{G}_T$ denotes the order-$r$ subgroup
+of $\mathcal{F}^*_{p^k}$.\cite{ecc.pairings.param}
+
+The literature calls this non-degeneratte biliniear maps from $\mathcal{G}_1 \times \mathcal{G}_2$
+to $\mathcal{G}_T$ as Type 3 pairings. \cite{ecc.pairings.param}
+
+%% ---
 
 For this practical reasons we choosed standardized curves mentioned in
 \textit{subsection \label{ssec:ibe.bonehfranklin.scheme}}.
+
+% TODO: Implementalni
+\subsubsection{IBE Scheme with ATE, TATE pairing}
+
+%% Pairings on ECC:
+%%% [https://www.math.auckland.ac.nz/~sgal018/crypto-book/ch26.pdf]
+%%% Tate:: https://crypto.stanford.edu/pbc/notes/ep/tate.html
+
+%% Hashing to ECC:
+%% [https://asecuritysite.com/ecc/hash_to_ecc]
 
