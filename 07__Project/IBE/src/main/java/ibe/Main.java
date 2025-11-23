@@ -139,8 +139,8 @@ public class Main {
         System.out.println("=".repeat(70));
         System.out.println("Test 1 - Basic Encrypt/Decrypt:     " + (test1Pass ? "✓ PASS" : "✗ FAIL"));
         System.out.println("Test 2 - Wrong Key Rejection:       " + (test2Pass ? "✓ PASS" : "✗ FAIL"));
-        System.out.println("Test 3 - Variable Length Messages:  " + (test3Pass ? "✓ PASS" : "✗ FAIL"));
-        System.out.println("Test 4 - Binary Data:               " + (test4Pass ? "✓ PASS" : "✗ FAIL"));
+        System.out.println("Test 3 - Cross-Identity:            " + (test3Pass ? "✓ PASS" : "✗ FAIL"));
+        System.out.println("Test 4 - Multiple Enc Same Message: " + (test4Pass ? "✓ PASS" : "✗ FAIL"));
 
         boolean allPass = test1Pass && test2Pass && test3Pass && test4Pass;
 
