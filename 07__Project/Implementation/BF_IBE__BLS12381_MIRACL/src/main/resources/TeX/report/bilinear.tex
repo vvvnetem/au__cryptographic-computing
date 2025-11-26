@@ -1,0 +1,49 @@
+% Bilinear mapping and Diffie-Hellmann assumptions
+
+\section{Bilinear mapping and Diffie-Hellmann assumptions}
+\label{ssec:bilinear.bdh}
+
+Let $\mathbb{G}_1$ and $\mathbb{G}_2$ be two groups of order $q$ for the prime $q$. In order to have $\hat{e}: \mathbb{G}_1 \rightarrow \mathbb{G}_2$ as an admissible bilinear map for \textit{BF-IBE} system, \textit{bilinearity}, \textit{non-degeneracy}, \textit{computability} properties must be satisfied as follows. The map $\hat{e}:\mathbb{G}_1 \times \mathbb{G}_2$ satisfies bilinearity if $\hat{e}(aP, bQ) = \hat{e}(P,Q)^{ab}$ for all $P,Q \in \mathbb{G}_1$ and for all $a,b \in \mathbb{Z}$.
+Non-degenerate property means that $\hat{e}$ map does not send all pairs in $\mathbb{G}_1 \times \mathbb{G}_1$ to the identity $\mathbb{G}_2$, this also implies if $P$ is a generator of $\mathbb{G}_1$ then $\hat{e}(P,P)$ is a generator of $\mathbb{G}_2$. \textit{Computability} means that some efficient algorithms exists to compute $\hat{e}(P,Q)$ for any $P,Q\in \mathbb{G}_1$. \cite{BF01}
+
+For a more broader list of equivalent transformations for pairing please refer to \textit{Appendix Section \ref{sec:apx.equivtransform}}. 
+
+\subsubsection{Security of pairings}
+\label{ssec:apx.ecc.curves.pairings.security}
+
+Later in our report we choose a specific $E$ elliptic curve family in conjunction to pairings (please refer to \textit{Section \ref{}}), hereby we note the summarization of security considerations related to $e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T$ pairings based on \cite{ecc.fam.param}: The \textit{(EC)DLP} problem must be hard in $\mathbb{G}_1, \mathbb{G}_2$ and $\mathbb{G}_T$, hardness of $\mathbb{G}_T$ is given by $k \cdot \lvert q \rvert$. When choosing parameters in $\mathbb{G}_1, \mathbb{G}_2$ we must ensure they are large enough. To approximate an optimal choice $\rho$ describes the balance between $r,q$ parameters: $\rho = \frac{\mathrm{log} q}{\mathrm{log} r}$. ($\rho = 1$ is optimal). 
+
+We choose $k$ security parameter in accordance of RFC9380\cite{ecc.hashing} standard, while for implementation of building and computing the map $\hat{e}$ we chose MIRACL\cite{lib.miracl} specific libraries.  
+
+The existence of $\hat{e} \mathbb{G}_1 \times \mathbb{G}_1 \rightarrow \mathbb{G}_2$ mapping implies that the discrete log problem in $\mathbb{G}_1$ can be reduced to a discrete log problem in $\mathbb{G}_2$, with \textit{MOV}(Menezes, Okamoto, and Vanstone) reduction method.\cite{BF01} Therefore me must choose the security parameter in a way that discrete log is hard in $\mathbb{G}_2$.
+
+On the otherhand the Decision Diffie-Hellman (noted as \textit{DDH} furthermore) is easy in $\mathbb{G}_1$ since we can distinguish between the distributions $\left<  P, aP, bP, abP \right> $ and $\left< P, aP, bP, cP \right>$  with $a,b,c \in \mathbb{Z}^*_q$ and $P \in \mathbb{G}^*_1$ as \textit{Joux} and \textit{Nguyen} pointed out. \cite{BF01}
+
+For this reason the Boneh-Franklin IBE scheme builds upon the Computational Diffie-Hellmann assumption, also called \textit{Bilinear Diffie-Hellman Assumption} (noted as \textit{BDH} furthermore): Given our $\mathbb{G}_1, \mathbb{G}_2$ and $\hat{e}$ mapping and $\left< P, aP, bP, cP\right>$ for some $a,b,c \in \mathbb{Z}^*_q$ compute $W = \hat{e}(P,P)^{abc} \in \mathbb{G}_2$. Then an algorithm 
+$\mathcal{A}$ has advantage $\epsilon$ in solving \textit{BDH} for $\left< \mathbb{G}_1, \mathbb{G}_2 \right>$ if: 
+
+\begin{equation*}
+	Pr \left[ \mathcal{A}(P, aP, bP, cP) = \hat{e}(P,P)^{abc} \right] \geq \epsilon
+\end{equation*}
+
+with probability where $a,b,c \in \mathbb{Z}^*_q$ and $P \in \mathbb{G}^*_1$ are random with random bits of $\mathcal{A}$.\cite{BF01}
+
+Previously we used $\mathcal{G}$ as \textit{BDH} generator within \textit{Section \ref{ssec:fullident}}, we give the full description of the assumption here based on \cite{BF01}: Having $\mathbb{G}$ be a \textit{BDH} parameter generator, than an $\mathcal{A}$ algorithm has advantage $\epsilon(k)$ in solving the $BDH$ problem for$\mathbb{G}$ for sufficient large $k$ \cite{BF01}: 
+
+\begin{equation*}
+	\begin{aligned}
+		Adv_{\mathcal{G},\mathcal{A}}(k)
+		&= Pr\Big[
+		\mathcal{A}(q,\mathbb{G}_1,\mathbb{G}_2,\hat{e},P,aP,bP,cP)
+		= \hat{e}(P,P)^{abc} \,\Big|\,
+		\langle g, \mathbb{G}_1,\mathbb{G}_2,\hat{e}\rangle \gets \mathbb{G}(1^k), \\
+		&\qquad\qquad
+		P \gets \mathbb{G}_1^*,\;
+		a,b,c \gets \mathbb{Z}_q^*
+		\Big]
+		\;\ge\; \epsilon(k)
+	\end{aligned}
+\end{equation*}
+
+
+ Consequently $\mathbb{G}$ satisfies the \textit{BDH} assumption for any randomized algorithm $\mathbb{A}$ has negligible advantage in $k$ for $Adv_{\mathbb{G}, \mathbb{A}}(k)$. In the following section we briefly review necessary background for pairing-based cryptography and how the aformentioned bilinear mapping can help us to choose the right elliptic curve family for our \textit{BF-IBE} implementation.

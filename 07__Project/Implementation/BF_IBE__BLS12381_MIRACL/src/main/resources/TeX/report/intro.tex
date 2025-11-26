@@ -1,0 +1,214 @@
+% TODO: Chosen Ciphertext Security <- proof 
+\section{Overview of Identity Based Encryption schemes}
+\label{sec:ibe.overview}
+
+In his original paper \cite{Shamir41} Shamir introduced a public key encryption
+scheme that resembled an ideal mail system, in which the public key can be an
+arbitrary string which  uniquely identifies the user in a way that he/she
+cannot later deny and that is readily available to the other party.\cite{Shamir41}
+
+Shamir's original motivation for identity-based encryption was to simplify the
+certificate, signing, and key management processes with regards
+for example in a mail system.\cite{BF01}.
+
+Let's say when \textit{Alice} wants to send  a mail to \textit{Bob} at \url{bob@company.com}
+she simply encrypts her message using the public key string \lstinline{bob@company.com}. 
+In the proposed cryptosystem there is no need for \textit{Alice} to obtain \textit{Bob}’s public key
+certificate. When Bob getting noticed that he received the encrypted mail he contacts a trusted
+third party called the \textit{Private Key Generator} (denoted as \textit{PKG}  furthermore) and 
+after authenticating himself to the \textit{PKG} \textit{Bob} obtains his private key
+from the \textit{PKG}. \cite{BF01}
+
+The authentication takes places in the same way \textit{Bob} would authenticate
+himself to a trusted Certificate Authority (denoted as CA furthermore).
+\textit{Bob} can then therefore read his e-mail sent by \textit{Alice}.
+
+In comparison to an existing secure e-mail infrastructure,
+with the use of the proposed fully functional
+identity-based encryption scheme\cite{BF01}
+\textit{Alice} can send an encrypted mail to \textit{Bob} even if he has not yet
+setup his public key certificate. Regarding the system's performance,
+now it becames comparable to the performance of
+ElGamal encryption\cite{cryptosys.elgamal} in $\mathbb{F}^{*}_p$. The security of the
+Boneh-Franklin scheme is analogues to the computational Diffie-Hellman assumption\cite{crypto.cdhddh},
+namely the new system has chosen ciphertext security in the random oracle model\cite{Bellare1993}.
+
+%% TODO: references here
+Following Boneh-Franklin's first publication, Identity-based schemes underwent significant development, as can be seen summarized in the \textit{Table \ref{tab:ibeupdated}}. Next to the scenario mentioned in paper \cite{Shamir41}, IBE can be a good choice in cases where \textit{Chosen Ciphertext Security}\cite{CHK04, BK04, BMW05}
+, \textit{digital signatures}, \textit{secret handshake}, \textit{searching on encrypted data}\cite{BDOP04,AB05}, forward secure encryption \cite{CHK03, BBG05}or \textit{adaptive oblivious transfer} \cite{GH08} are the desired goal to achieve.
+
+\begin{table}[h]
+    \centering
+\begin{tabular}{ |p{3cm}||p{3cm}|p{3cm}|p{3cm}|  }
+ \hline
+ \multicolumn{4}{|c|}{IBE-based constructions} \\
+ \hline
+ & \textbf{Based on pairings}, $e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T$ & \textbf{Based on lattices} (Learning with errors) & \textbf{Quadratic Residuosity} \\
+ \hline
+ IBE with \textit{Random Oracle}   & Boneh-Franklin scheme\cite{BF01},Boneh-Boyek scheme\cite{BB04}  , Waters-IBE\cite{Waters05} , Gentry-IBE\cite{Gentry06} , DualSys-IBE\cite{W09}     & Trapdoors for hard lattices\cite{GPV08} &   Space-efficient IBE\cite{BGH07}\\
+ \hline
+  IBE without \textit{Random Oracle}&  Forward-secure PKE\cite{CHK03}   &  Delegation of lattice basis\cite{CHKP10}   & \textit{future work}\\
+  \hline
+  Hierarchical IBE &  Hierarchical ID-based cryptography\cite{GS03} & Delegation of lattice basis\cite{CHKP10} & \textit{future work}\\
+ \hline
+\end{tabular}
+    \caption{ Overview of Identity-Based cryptographic construction families  \cite{theory.ec.ibeupdate}}
+    \label{tab:ibeupdated}
+\end{table}
+
+
+Also the authors showed that in their scheme \textit{PKG}
+can be distributed using standard techniques from treshold
+cryptography\cite{crypto.seckeydistdl}, consequently given the
+\textit{Boneh-Franklin} scheme based IBE, the
+\lstinline{master-key} is never available in a single location.
+
+For the detailed description about distributed MSK (\textit{Master Shared-Key })
+please refer to \textit{Section \ref{ssec:shamirsecretshare}}.
+
+
+% Boneh-Franklin scheme based IBE intro
+\subsection{Building blocks for Boneh-Franklin IBE Scheme}
+\label{sec:ibe.bonehfranklin.scheme}
+
+% TODO: 
+% Fujisaki-Okamoto [16]
+
+%% Theoretical background for IBE (Boneh-Franklin scheme )
+
+An identity-based encryption scheme $\varepsilon$ is defined formally
+by four randomized algorithms: \lstinline{Setup}, \lstinline{Extract},
+\lstinline{Encrypt} and \lstinline{Decrypt} as follows:
+
+\begin{itemize}
+	
+	%%%
+	% INFO: Itt van 1 kulon eset is amikor BOB == DKG (jelenleg ez van implementalva)
+	% TODO: k security parameter legyen kulon valtozo (ez hatarozza meg a primek hosszat)
+	\item[] \textbf{Setup:} Takes $k$ security parameter as input, and outputs the \lstinline{params} system parameters and \lstinline{master-key}.
+	The \lstinline{params} system parameters describes the finite message space
+	$\mathcal{M}$ and the finite ciphertext space $\mathcal{C}$.
+	In addition, the \lstinline{params} system parameters are publicly known,
+	while the \lstinline{master-key} will be known only for the Private Key Generator (\textit{PKG} furthermore. Please note, we call \textit{PKG} as \textit{DKG} in case it generates the  \lstinline{master-key} via \textit{Multiparty-Computation} ).\cite{BF01} For the implementation of  \lstinline|Setup| algorithm,
+	please refer to \textit{Code snippet  \ref{code.ibe.setup}}  within \textit{Section \ref{sec:bfibe.imp}}
+	
+	% BF_IBE.extract()
+	\item[] \textbf{Extract:} Takes \lstinline{params}, \lstinline{master-key} and an arbitrary $\mathrm{ID} \in \{0,1\}^*$ as input,
+	and outputs $d$ private key. $\mathrm{ID}$ is and arbitrary string that corresponds to the private key $d$
+	In addition, the \lstinline{Extract} algorithm extracts the private key from the given public key \cite{BF01}. For the implementation of \lstinline|Extract| algorithm, please refer to \textit{Code snippet \ref{code.ibe.extract} }  within \textit{Section \ref{sec:bfibe.imp}}
+	
+	% BF_IBE.encrypt()
+	\item[] \textbf{Encrypt:} The \lstinline{Encrypt} algoritm takes \lstinline{params}, $\mathrm{ID}$ and $M \in \mathcal{M}$ as input,
+	and outputs $C \in \mathcal{C}$ \cite{BF01}. For the implementation of \lstinline|Encrypt| algorithm, please refer to \textit{Code snippet \ref{code.ibe.encrypt} }  within \textit{Section \ref{sec:bfibe.imp}}
+	
+	% BF_IBE.decrypt()
+	\item[] \textbf{Decrypt:} The The \lstinline{Decrypt} algoritm takes \lstinline{params} and private key $d$ and $C \in \mathcal{C}$ as input,
+	and outputs $M \in \mathcal{M}$\cite{BF01}. For the implementation of \lstinline|Decrypt| algorithm, please refer to \textit{Code snippet \ref{code.ibe.decrypt} }  within \textit{Section \ref{sec:bfibe.imp}}
+\end{itemize}
+
+The standards consistency check for the outlined algorithms can be
+summarized as follows:
+
+\begin{equation*}
+	\forall M \in \mathcal{M}: \mathrm{Decrypt}(\mathrm{params}, \mathrm{Encrypt}(\mathrm{params}, \mathrm{ID}, M),d) = M
+\end{equation*}
+
+The standard acceptable notion for security
+is \textit{chosen ciphertext security} (denoted as \textit{IND-CCA} furthermore), however
+for Identity-Based Ecnryption schemes the definition can be strengthened a bit for the following reason: when and \textit{Adversary} attacks a \textit{public key ID} then we should also assume that the \textit{Adversary} might already obtainedd the private key associated with any identtity $ID_i$, other than the public key \textit{ID} being attatcked.  We refer such queries as\textit{ private/public key extraction queries} furthermore. \cite{BF01}
+
+% TODO: ide behivni az implementaciobol Setup, Extract, Decryption, Encrypt algoritmusokat, 
+We say that the identity-based dencryption scheme $\varepsilon$ is semantically secure against an adaptive
+chosen ciphertext attack (\textit{IND-ID-CCA}) if no polynomially bounded adversary $\mathcal{A}$ has a non-negligible advantege against the \textit{Challanger} in the following \textit{IND-ID-CCA} game:
+	During the \textit{Setup} phase the challenger takes a security parameter $k$ and runs the \lstinline|Setup| algorithm, then it keeps the master-key to itself and sends the resulting system parameters \lstinline|params| to $\mathcal{A}$ \textit{Adversary}\cite{BF01}. 	
+	In \textit{Phase 1} the adversary issues private key extraction queries $ID_1, \ldots, ID_m$ . The challenger 	responds by running algorithm Extract to generate the private key di corresponding to the public key $ID_i$ . It sends $d_i$ to the adversary. The queries may asked adaptively. 	Troughouth the \textit{Challange phase} the adversary outputs two equal length
+	plaintexts $\mathcal{M}_0, \mathcal{M}_1 \in \mathcal{M}$ and a public key $ID$ (such that it did not appear in any private key extraction query in \textit{Phase 1}) it 
+	wishes to be challenged.  The challanger picks a random bit $b \in \{0,1\}$ and sets $C = \mathrm{Encrypt}(\mathrm{params}, ID, M_b)$. Then $C$ will be sent as a challange to the adversary. 	In \textit{Phase 2} the adversary issues more extraction queries $ID_{m+1}, \ldots, ID_n$ with constraint $ID_i \neq ID$. The challanger reponds as in \textit{Phase 1}. Finally, the adversary outputs the guess $b' \subset \{0,1\}$ and wins the game if $b = b'$.\cite{BF01}
+	
+Please note, for rest of our report we use $\mathbb{Z}_q$ to denote the group $\{ 0, \ldots , q-1\}$ under addition modulo $q$. Therefore a group $\mathbb{G}$ of prime order we use $\mathbb{G}^*$ which denotes the set $\mathbb{G}^* = \mathbb{G}\backslash\{O\} \}$, where $O$ denotes the identity element of group $\mathbb{G}$. To denote the set of positive integers we will use $\mathbb{Z}^{+}$ in accordance with the notation used in \cite{BF01}.
+
+% IND-ID-CCA secure
+\subsection{FullIdent: Securing Boneh-Franklin scheme against adaptive chosen ciphertext attack}
+\label{ssec:fullident}
+
+
+The authors also extended their basic identity-based encryption to be secure against an adaptive chosen ciphertext attack (IND-ID-CCA) in the random oracle model. \cite{BF01} The scheme is incorporating four algorithms: \textit{Setup}, \textit{Extract}, \textit{Encrypt} and \textit{Decrypt} as can be followed within \textit{FullIdent algorithm \ref{code:p.FullIdent}}. 
+
+In every case the message space is $\mathcal{M}=\{0,1\}^n$ and cipherspace is $\mathcal{C}= \mathbb{G}^*_1 \times \{0,1\}^n$. Also $\mathcal{G}$ denotes some BDH parameter generator (for further the description of bilinear maps and the underlying  Diffie-Hellmann Assumptions refer to \textit{Section \ref{ssec:bilinear.bdh}}
+).\cite{BF01}
+
+\begin{algorithm}[H]
+	\SetAlgoLined
+	\textbf{Setup phase}: \;
+	\KwIn{$k$, security parameter chosen from $\mathbb{Z}^{+}$}
+	% Setup phase-nel itt lesz meg H_3, H_4 a FullIdent-hez
+	\KwOut{System parameters $\mathrm{params}=\left< q, \mathbb{G}_1, \mathbb{G}_2, \hat{e}, n, P, P_{pub}, H_1, H_2 \right>$ }
+		Step 1: We run $\mathcal{G}$ on $k$ which yields a prime $q$, $\mathbb{G}_1, \mathbb{G}_2$ groups of order $q$, and an admissible bilinear map $\hat{e}: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}$.Random generator is chosen $P \in \mathbb{G}_1$.
+		
+		Step 2: We pick a random $s \in \mathbb{Z}^{*}_{q}$ then set $P_{pub} = sP$, where $s$ is the master-key $s \in \mathbb{Z}^*_q$
+		
+		Step 3: Cryptographic hash $H_1, H_2, H_3, H_4$ functions are chosen as random oracles:
+			
+			$H_1: \{ 0,1 \}^* \rightarrow \mathbb{G}^*_1$
+			
+			$H_2: \mathbb{G}_2 \rightarrow \{0,1\}^n$ for some $n$.
+			
+			$H_3: \{0,1\}^n \times \{0,1\}^n \rightarrow \mathbb{Z}^*_q $ 
+			
+			$H_4: \{0,1\}^n \rightarrow \{0,1\}^n $
+	
+	\textbf{Extract phase: }\;
+	 For given $\mathrm{ID} \in \{0,1\}^*$ string we compute $Q_{id}=H_1(ID) \in \mathbb{G}^*_1$ and setting $d_{id}$ private key to be $d_{ID} = sQ_{ID}$, where $s$ is the master key as before.
+	
+	\textbf{Encrypt phase: }\;
+		To encrypt $M\in \{0,1\}^n$ with public key $ID$, we compute: $Q_{ID} = H_1(ID) \in \mathbb{G}^*_1$, then choose a random $\sigma \in \{0,1\}^n$, then set $r=H_3(\sigma, M)$ lastly the $C$ ciphertext can be computed as: $C = \left< rP, \sigma \oplus H_2(g^r_{ID}), M \oplus H_4(\sigma) \right>$, where $g_{ID} = \hat{e}(Q_{ID}, P_{pub})\in \mathbb{G}_2$.
+	
+	\textbf{Decrypt phase: }\;
+		Let $C = \left< U,V,W \right>$ be the ciphertext encrypted with public key $ID$. First we check $U \neq \mathbb{G}^*_1$ holds, if true we reject the $C$ ciphertext. To decrypt $C$ with private key $d_{ID} \in \mathbb{G}^*_1$ we proceed as follows:
+			
+			1. Compute $V \oplus H_2(\hat{e}(d_{ID}, U)) = \sigma$
+			
+			2. Compute $W \oplus H_4(\sigma) = M$.
+			
+			3. Set  $r= H_3(\sigma, M)$. Test that $U = rP$, if not reject the ciphertext.
+			
+			4. Output $M$ as the decryption of $C$.
+	\caption{Boneh-Franklin based scheme: FullIdent Algorithm}\label{code:p.FullIdent}
+\end{algorithm}
+
+For consistency verification, we make sure that during encryption $M$ is bitwise $XOR$-ed with the hash of $g^r_{ID}$. Also, during encryption $V$ is bitwise $XOR$-ed with the hash of $\hat{e}(d_{ID}, U)$. We use the properties of pairings for checking these masks are the same as follows \cite{BF01}: 
+
+\begin{equation*}
+	\hat{e}(d_{ID}, U) = \hat{e}(sQ_{ID}, rP) = \hat{e}(Q_{ID}, P)^{sr}= \hat{e}(Q_{ID}, P_{pub})^r = g^r_{ID}
+\end{equation*}
+
+% 16
+To convert the \textit{BasicIdent}\cite{BF01} scheme into a chosen ciphertext secure 
+system \textit{Fujisaki-Okamoto}'s technique can be used in the random oracle model as proposed within \cite{FujisakiOkamoto}. Let $\varepsilon_{pk}(M;r) $ be the encryption of $M$ using $r$ random bits with $pk$ public key. Therefore the \textit{Fujisaki-Okamoto} hybrid scheme can be formalized  in  \textit{Equation \ref{eq:ibe.okamoto}}
+
+\begin{eqnarray}
+	\label{eq:ibe.okamoto}
+	\varepsilon^{hy}_{pk}(M) = \left< \varepsilon_{pk}(\sigma;H_3(\sigma,M)), H_4(\sigma) \oplus M \right> 
+\end{eqnarray}
+
+
+Within \textit{Equation \ref{eq:ibe.okamoto}} $H_3, H_4$ denotes cryptographic hash functions, and $\sigma$ is generated at random. In \cite{FujisakiOkamoto} Fujisaki-Okamoto showed that if $\varepsilon$ is a one-way encryption scheme then $\varepsilon^{hy}$ is a chosen ciphertext secure system (IND-CCA) in the
+random oracle model (assuming $\varepsilon_{pk}$ satisfies some natural constraints). In addition, semantic security implies one-way encryption and hence the Fujisaki-Okamoto result also applies if $\varepsilon$ is semantically secure (IND-CPA). For instance, $M$ is encrypted as $W = M \oplus H_4(\sigma)$ within \textit{FullIdent Algorithm \ref{code:p.FullIdent}}, but it can be replaced by $W = E_{H_4(\sigma)}(M)$, with respect to semantically secure symmetric encryption scheme of $E$. \cite{BF01}
+
+To see that \textit{FullIdent} is chosen ciphertext secure $IBE$ (IND-ID-CCA) under BDH assumption (BDH is hard within groups generated by $\mathcal{G}$) we use \textit{Theorem 4.4} from \cite{BF01}:
+
+Given an IND-ID-CCA adversary $\mathcal{A}$ that has advantage $\varepsilon(k)$ against the \textit{FullIdent} scheme with running time at most $t(k)$. Then $\mathcal{A}$ makes at most $q_E$ extraction and at most $q_D$ decryption queries, 
+while at most $q_{H_2}, q_{H_3}, q_{H_4}$ queries for the hash functions $H_2, H_3, H_4$ respectively. Thus the BDH algorithm (denoted as $\mathbb{B}$) for $\mathcal{G}$ with running time at most $t(k)$ can be  written as follows \cite{BF01} in \textit{Equation \ref{eq:hashcca}}: 
+
+\[
+\begin{array}{c c c}
+ Adv_{\mathcal{G},\mathcal{B}} (k) & \geq & 2 FO_{adv} \left( \frac{\varepsilon(k)}{\varepsilon(1+q_E+q_D)} \right)q_{H_2} \\
+ & & \\
+ t_1(k)& \leq & FO_{time}(t(k), q_{H_4}, q_{H_3})
+\end{array}
+\]
+
+
+
+
+

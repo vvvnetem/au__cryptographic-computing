@@ -1,0 +1,244 @@
+% ECC curve specifikus
+\section{Choosing Pairing-friendly Elliptic Curve}
+\label{sec:apx.ecc.curves}
+
+An elliptic curve $E$ is specified by an equation in two variables and
+a finite field $\mathbb{F}$. The equation that describes the elliptic curve 
+can take standard forms, including (but not limited to) \textit{Weierstrass},
+\textit{Montgomery}, and \textit{Edwards}. In addition the curve $E$ induces an algebraic group of order $n$, meaning that the group has $n$ distinct elements. \cite{ecc.hashing} Please note, in this report we uses additive notation
+for the elliptic curve group operation.
+
+An elliptic curve is said to be the set of solutions to the \textit{Weierstrass form}
+\textit{equation \ref{eq:ecc.weierstrass}} with respect to
+$(x,y) \in \mathbb{F}_{q^m} \times \mathbb{F}_{q^m}$.\cite{ecc.fam.param}  The elements of an elliptic curve group are points with affine coordinates $(x, y)$ satisfying the curve equation, where $x$ and $y$ are elements of $\mathbb{F}$.  In addition, all elliptic curve groups have a distinguished element, called the \textit{identity
+point}, which acts as the identity element for the group operation.
+(In case of \textit{Weierstrass} and \textit{Montgomery} curves, the
+identity point cannot be represented as an $(x, y)$ coordinate pair.
+)\cite{ecc.hashing}
+
+With regards to security reasons we should take into consideration that cryptographic applications of elliptic curves generally require using a (sub)group of prime order, therefore let $G$ denotes the subgroup of the curve of prime order $r$ with respect to $h$ cofactor, where $n = h \cdot r$. We also note, that an algorithm that 
+as input an arbitrary point on the curve $E$ and produces as output a point in the subgroup $G$ of $E$ is often referred as \textit{cofactor clearing}. Also ,certain hash-to-curve algorithms restrict the form of the curve equation, the characteristic of the field, or the parameters of the curve.\cite{ecc.hashing} Please refer to \textit{Section \ref{ssec:hash.to.curve}} for further details.
+
+In accordance with \textit{RFC9380} for this report we use notation the relevant to elliptic curves and quantities relevant to hashing to curves (refer to later \textit{Section \ref{ssec:hash.to.curve}}) introduced within \cite{ecc.hashing} as follows:
+$E$ denotes elliptic curve ( for instance $E$ is specified by \textit{\ref{eq:ecc.weierstrass} equation} and a field $\mathbb{F}$ ). 
+ $\mathbb{F},p,q$ denotes finite field of $\mathbb{F}$ of characteristics $p$ and $\#F= q = p^m$ in case of prime fields $q=p$, otherwise $q = p^m$ and $m>1$. $n$  will be the number of points on the $E$ elliptic curve computed as  $n= h \cdot r$. In the equation $r$ denotes the order of $G$, also it is (usually) the largest prime factor of $n$. $h$ is the so called cofactor, with property $h \geq 1$ $h$ and $n = h \cdot r$. $G$ denotes a prime-order subgroup of the points on $E$, consequently $G$ is a destination group to which byte strings are encoded.  \cite{ecc.hashing}
+
+% Weierstrass equation
+\begin{equation}
+	\label{eq:ecc.weierstrass}
+	E: y^2 = x^3 + ax + b,
+\end{equation}
+where $a,b \in \mathbb{F}_{q^m}$ $\Delta \neq 0 $ (discriminant)
+and a point at infinity ($\infty$).\cite{ecc.fam.param} Also $E'$ a degree $d$ twist of $E$ is an isomorphic curve to $E$ over the algebraic closure of $\mathbb{F}_{q^m}$. The only possible
+degrees for elliptic curves are $d \in {2,3,4,6}$.\cite{ecc.fam.param} The order $n$ of the curve is the number of points that satisfy the curve equation. The \textit{Hasse coddition} states the following
+\textit{\ref{eq:ecc.hassecond} equation}:
+
+\begin{equation}
+	\label{eq:ecc.hassecond}
+	n = q^m +1 - t,~~ \lvert t \rvert \leq 2 \sqrt{q^m}
+\end{equation}
+
+The literature calls such such curves \textit{supersingular} if $q$ divides $t$. The order of point $P$ is the smallest integer $r$ such that $rP = \infty$. It is also true that the order of the point
+is a dividant of the curve order: $r|n$. The $r$-torsion subgroup (denoted as $E(\mathbb{F}_{q^m}[r])$) is the set of points $P$ in which their order divides $r$.\cite{ecc.fam.param}
+
+
+\subsubsection{Choosing Type-3 elliptic curves over Type-1 curves}
+\label{sec:apx.ecc.curves.pairing}
+
+In case of pairings ( $e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T $) there are some properties we can rely on.
+Namely, $\mathbb{G}_1$ is typically a subgroup of $E(\mathbb{F}_q)$,
+$\mathbb{G}_2$ is typically a subgroup of $E(\mathbb{F}_q^k)$,
+lastly $\mathbb{G}_T$ is a multiplicative subgroup of $\mathbb{F}^*_{q^k}$.\cite{ecc.fam.param}
+
+% In practice we want small `k` for computable pairing
+The embedding degree of $\mathbb{F}_q$ is the smallest integer $k$,
+in which we can embed the $r$-torsion group: $r|(q^k-1)$. For efficiency reasons
+we want to the largest $d$ such that $d|k$.\cite{ecc.fam.param}
+The families of ordinary curves usually have $k < 50$, random curves have
+$k \approx q$, but for supersingular curves we have embedding degree of
+$k \leq 6$.\cite{ecc.fam.param}
+
+From the \textit{Adversary}'s point of view $k$ is usually very large and hence mapping
+the problem into the $\mathbb{F}_{p^k}$ ﬁeld is useless for an attacker.
+As for super-singular curves that the $k$ embedding degree
+is small, but on the other hand, If we choose the curves large enough,
+discrete log will still be hard despite the attacks.\cite{crypto.ivan.cryptology}
+
+Additionally, when generating curves we also have to be cautious about the $\mathbb{G}_i$ relations.
+In case $\mathbb{G}_1 = \mathbb{G}_2$ the pairing is symmetric (also called \textit{Type-1} curves)
+and defined over a supersingular curve with $\psi$ distorsion map
+as can be seen in \textit{Equation \ref{eq:ecc.supersingularmapping}}\cite{ecc.fam.param}:
+
+\begin{equation}
+	\label{eq:ecc.supersingularmapping}
+	\psi : E(\mathbb{F}_q[r] \rightarrow E(\mathbb{F}_q^k[r])
+\end{equation}
+
+With assymetric (also called \textit{Type-3} curves )
+$\mathbb{G}_1 \neq \mathbb{G}_2$, and $\mathbb{G}_2$ is chosen
+as the group of points in the twist that is isomorphic to a subgroup
+of $E(\mathbb{F}_q^k[r])$. In the latter case there is no efficient
+map $\psi : \mathbb{G}_2 \rightarrow \mathbb{G}_1$. \cite{ecc.fam.param}
+
+
+Let $p$ be a prime and $E$ be the elliptic curve defined over $\mathbb{F}_p$ finite field. Let $r$ be a prime with $r \mid \# E(\mathbb{F}_p)$ and $gcd(r,p)=1$. Then the cofactor is $\rho = \frac{\mathrm{log} p}{\mathrm{log} q}$.
+Let $k$ be the \textit{embeddding degree}, which $k$ is the smallest positive integer
+with $r | (p^k -1)$. Let $\Pi: (x,y) \rightarrow  (x^p,y^p) $ be the $p$-th
+power \textit{Frobenius} endomorphism. The trace of the \textit{Frobenious} is
+$t = p+1 - \#E\mathbb{F}_p)$.\cite{ecc.pairings.param}
+
+Then $\mathbb{G}_1$ can be rewritten as the 1-eigenspace of $\Pi$ acting
+on $E[r]$ as follows: $\mathbb{G}_1 = \{ P \in E[r]: \Pi(P) = P\} = E(\mathbb{F}_p)[r]$.
+Also let $d$ be the order of the automorphism group of $E$ in a way that $d | k$ also holds.\cite{ecc.pairings.param}
+
+Let $e = k/d$ and $q=p^e$. Then the unique degree-$d$ twist (denoted as $\tilde{E}$) of $E$ over
+$\mathbb{F}_q$ has the property of $r | \# \tilde{E} (\mathbb{F}_q)$. The associated
+twisting isomorphism can be described as $\Psi: \tilde{E} \rightarrow E$. Let $\tilde{Q} \in \tilde{E}(\mathbb{F}_q)$
+be the point of order $r$ then $Q = \Psi (\tilde{Q}) \notin E(\mathbb{F}_p)$. Then we
+can view $\mathbb{G}_2$ as the $p$-eigenspace of $\Pi$ acting on $E[r]$, written as
+$\mathbb{G}_2 = \left< Q \right>$. Finally, $\mathbb{G}_T$ denotes the order-$r$ subgroup
+of $\mathbb{F}^*_{p^k}$.\cite{ecc.pairings.param}
+
+The literature calls this non-degenerate bilinear maps from $\mathbb{G}_1 \times \mathbb{G}_2$
+to $\mathbb{G}_T$ as Type 3 pairings. \cite{ecc.pairings.param} 
+
+\subsubsection{The Tate Pairing}
+
+Let $E$ be an elliptic curve containing $n$ points over the field $\mathbb{F}_q$, $G$ will denote a cyclic subgroup of $E(\mathbb{F}_q)$ of order $r$ with $r,q$ coprime. Let $k$ be the smallest positive integer such that $r| q^k -1$, while $K$ be the smallest extension of $\mathbb{F}_q$ containing the $r$th roots of unity as $K= \mathbb{F}_{q^k}$. Then the Tate pairing $e: E[r] \bigcap E(K) \times E(K)/rE(K) \rightarrow K^*/K^{*r}$. \cite{lynn2007implementation}
+
+Let $f_P$ be a rational function with divisior $(f_P)= (P)^r$, then choose $R \in E(K)$ such that $R \neq P, P-Q, O, -Q$. Then we can define $f(P,Q)= f_P(Q+R)/f_P(R)$.
+It can be showed that the value is independent of the choice of $R$, therefore $f(aP,bQ) = e(P,Q)^{ab}$ for all $P,Q,a,b$ in case of $f(P,Q)=1$ for all $P$ if $Q=O$. Consequently $f(P,Q) = 1$ for all $Q$ if $P=O$. With regards to the Frobenius map we have $f(\Phi(P), \Phi(Q))=f(P,Q)^q$ for all $P,Q \in E[r]$ where $\Phi$ denotes the Frobenius map. Lastly the output of the pairing scheme is some $x \in K^*$ that represents the coset $xK^{*r}$. \cite{lynn2007implementation}
+
+We can now view our scenario as a special case of $R=O$, thus the intermediate function $f_k$ can be defined by $(f_k)=(P^k)/(kP)$. This yields us with equality $(f_r)=(f_P)$. Now $f_{k+1} = (f_k L_{kP,P}/ V_{(k+1)P})$ gives us Miller's algorithm as can be seen \textit{Algorithm \ref{alg:miller}}. Miller's algorithm computes $f_P(Q)$ given points $P,Q$ with respect to $r$ order of $P$. Finally it outputs $x=f_r(Q)$, with respect to $Z=rP=O$ \cite{lynn2007implementation}
+
+\begin{algorithm}
+	\caption{Miller's algorithm for Tate pairing $x=f_P(Q)$}\label{alg:miller}
+	$x \gets 1$\\
+	$Z \gets P$\\
+	\For{$i \gets t-1, \ldots 0$}{
+	$x \gets x^2 \cdot T_Z(Q)/V_{2Z}(Q)$\\
+	$Z \gets 2Z$
+		\If{$r_i=1$}{
+			$x \gets x \cdot L_{Z,P}(Q)/V_{Z+P}(Q)$\\
+			$Z \gets Z + P$
+		}
+	}
+\end{algorithm}
+
+For our project we are rely upon MIRACL\cite{lib.miracl} \lstinline|ate()| implementation which uses Optimal $r$-Ate pairing  (refer to \textit{Section \ref{}}).  Although we note that there are many different optimization techniques have been researched and implemented with regards to pairings \cite{Aranha2011} as well.
+
+\subsubsection{Barreto-Lynn-Scott Curve}
+
+As we reviewed previously pairing is a kind of bilinear map defined over two elliptic curves $E$ and $E'$. 
+A Barreto-Naehrig Curve (BN) curve [BN05] is one of the instantiations of pairing-friendly curves proposed in 2005. A pairing over BN curves constructs optimal Ate pairings. In contrast to BN curves, $E(F\_p)$ does not have a prime order, instead its order is divisible by a large parameterized prime $r$ and denoted by $h * r$ with cofactor $h$. The pairing will be defined on the $r$-torsions points.\cite{ecc.pairing.curves.bls}
+
+More formally a BLS curve family consideres elliptic curves $E$ and $E'$ parameterized by a well chosen integer $t$. $E$ is defined over a finite field $F\_p$ by an equation of the form $E: y^2 = x^3 + b$, and its twisted curve, $E': y^2 = x^3 + b'$, where $b$ is an element of multiplicative group of order $p$.
+Similarly to BN curves BLS curves can also be categorized as D-type and M-type whether $b' = b / m$ or $b' = b * m$ respectively.\cite{ecc.pairing.curves.bls}
+
+The BLS curve can be parameterized with $p, r$  with respect to $t$ as follows\cite{ecc.pairing.curves.bls}: 
+
+	\begin{align}
+	&p= (t - 1)^2 \cdot (t^4 - t^2 + 1) / 3 + t \\
+	&r= t^4 - t^2 + 1
+\end{align}
+
+Then the $\hat{e}$ pairing can be defined by taking $\mathbb{G}_1$  as a subgroup of $E(\mathbb{F}_p)$ of order $r$, $\mathbb{G}_2$ as an order $r$ subgroup of $E'(\mathbb{F}_{p^2})$, lastly $\mathbb{G}_T$ as  an order $r$ subgroup of a multiplicative group $(\mathbb{F}_{p^12})^* $. \cite{ecc.pairing.curves.bls} 
+
+For our implementation we choosed embedding degree as $12$ thus BLS12 curve family was choosen.
+Secondly we aimed at 128-bit security level to be close as possible for RFC9380 compliant regarding the hashing to curve problem. Although we aware of that attacks such as extended tower number field sieve (exTNFS), have been proposing to aim for higher security levels with regards to choosing the minimum bit length of $p$ as 384 bits\cite{ecc.pairing.curves.bls}, we choosed to use the standardized parameters and test vectors for BLS-381.
+
+Thus,  $t$ is defined by $t= -2^63 - 2^62 - 2^60 - 2^57 - 2^48 - 2^16$, and size of $p$ becomes 381-bit length.  The $E$ elliptic curve its twisted curve $E'$ are represented by $E: y^2 = x^3 + 4$ and $E': y^2 = x^3 + 4(u + 1)$, the $\hat{e}$ is defined by taking $\mathbb{G}_1$ as a cyclic group of order $r$ generated by a base point $BP = (x, y)$ in $\mathbb{F}_p$, $\mathbb{G}_2$ as a cyclic group of order $r$ generated by a based point $BP' = (x', y')$ in $ \mathbb{F}_{p^2}$, and $\mathbb{G}_T$ as a subgroup of a multiplicative group $(\mathbb{F}_{p^12})^*$ of order $r$.
+
+
+ For the finite field $\mathbb{F}_p$, the towers of extension field $\mathbb{F}_{p^2}$, $\mathbb{F}_{p^6}$ and $\mathbb{F}_{p^12}$ are defined by indeterminates $u, v, w$ as follows:
+
+	\begin{align}
+	&  \mathbb{F}_p^2 = \mathbb{F}_p[u] / (u^2 + 1)\\
+	& \mathbb{F}_p^6 = \mathbb{F}_p^2[v] / (v^3 - u - 1)\\
+	&  \mathbb{F}_p^12 = \mathbb{F}_p^6[w] / (w^2 - v)
+\end{align}
+
+For the parameters specified by \cite{ecc.pairing.curves.bls} please refer to \textit{Appendix Section \ref{ec:apx.hashtocurve}}.
+
+
+\subsection{Hashing into BLS12-381 Elliptic Curve}
+\label{ssec:hash.to.curve}
+
+
+To analyze the security of cryptographic constructions Bellare and Rogaway introduced an idealized security model called the \textit{Random Oracle Model} \cite{Bellare1993}. We can think about such random oracle as a function defined das $H: X \rightarrow Y$. Chosen uniformly at random from the set of all functions $\{h: X \rightarrow Y\}$ with assumption of $Y$ is a finite set. The algorithm that queries the random oracle then receive the value $H(x)$ for all $x \in X$ in response. \cite{BF01}
+
+
+Many cryptographic protocols require a procedure that encodes an
+arbitrary input, e.g., a password, to a point on an elliptic curve.
+This procedure is known as hashing to an elliptic curve, where the
+hashing procedure provides collision resistance and does not reveal
+the discrete logarithm of the output point. \cite{ecc.hashing} 
+
+Since the precise hash function that is suitable for a given protocol implemented using a given elliptic curve is often unclear from the protocol's description 
+and probabilistic rejection sampling methods (referred as \textit{try-and-increment} )
+are not recommended because of side-channel vulnerabilities \textit{BLS12-381} suite was choosed in accordance to RFC 9380, with regards to serialization, domain separation, \lstinline|expand_message_xmd| function and finally with hashing suite \textit{BLS12381G1\_XMD:SHA-256\_SSWU }. \cite{ecc.hashing}
+
+
+\subsubsection{Encoding Byte Strings to BLS12-381 Curve}
+
+The general constructions for encoding byte strings to points 
+on an elliptic curve relies on three functions: \lstinline|hash_to_field| hashes arbitrary-length byte strings to a list of one or more elements of a finite field $\mathbb{F}$, function \lstinline|map_to_curve| calculates a point on the elliptic curve $E$ from an element of the finite field $\mathbb{F}$ over which $E$ is defined, lastly the function \lstinline|clear_cofactor| sends any point on the curve $E$ to the
+subgroup $G$ of $E$. \cite{ecc.hashing}
+
+The two distinct Algorithm for encodings (\lstinline|encode_to_curve()|, \lstinline|hash_to_curve()|) are both have the same interface and are both random-oracle encodings. The only difference between them is their outputs are sampled from different distributions.   The algorithm \lstinline|encode_to_curve()| is a  a nonuniform encoding from byte strings to points in $G$, meaning that the distribution of its output is not
+uniformly random in $G$. Consequently the set of possible outputs of
+\lstinline|encode_to_curve()| is only a fraction of the points in $G$, and some
+points in this set are more likely to be output than others as can be followed in \textit{pseudo-code \ref{code:p.encodetocurve}}.\cite{ecc.hashing}
+
+\begin{algorithm}[H]
+	\SetAlgoLined
+	\KwIn{$msg$, an arbitrary-length byte string}
+	\KwOut{$P$, a point in $G$}
+	Steps: \;
+	1. $u = \mathrm{hash\_to\_field}(msg, 1)$\;
+	2. $Q = \mathrm{map\_to\_curve}(u[0])$\;
+	3. $P = \mathrm{clear_cofactor}(Q)$\;
+	4. return $P$\;
+	\caption{Pseudocode for encoding into elliptic curve\cite{ecc.hashing} under  Random-Oracle Model}\label{code:p.encodetocurve}
+\end{algorithm}
+
+On the other hand, \lstinline|hash\_to\_curve()| is a uniform encoding from byte  strings to points in $G$, as can be followed  in \textit{pseudo-code \ref{code:p.hashtocurve}}, where $R = Q0 + Q1$ represents point addition on the curve. Meaning that the distribution of its output is statistically close to uniform in $G$, consequently the function is suitable for applications requiring a random oracle returning points in $G$, when instantiated with any of the mapping onto curve functions, in accordance to RFC 9380\cite{ecc.hashing}.
+
+\begin{algorithm}[H]
+	\SetAlgoLined
+	\KwIn{$msg$, an arbitrary-length byte string}
+	\KwOut{$P$, a point in $G$}
+	Steps: \;
+	1. $u = \mathrm{hash\_to\_field}(msg, 2)$\;
+	2. $Q0 = \mathrm{map\_to\_curve}(u[0])$\;
+	3. $Q1 = \mathrm{map\_to\_curve}(u[1])$\;
+	4. $R = Q0 + Q1$ \;
+	5. $P = \mathrm{clear\_cofactor}(R)$\;
+	6. return $P$\;
+	\caption{Pseudocode for hashing to elliptic curve\cite{ecc.hashing} under  Random-Oracle Model}\label{code:p.hashtocurve}
+\end{algorithm}
+
+The   \textit{Table \ref{tab:bls12381hashg1g2}}  within \textit{Appendix Section \ref{app.}} summarizes the parameters for the chosen BLS12-381 curve with regards to $G_1, G_2$ specified by \textit{RFC9380}\cite{ecc.hashing}. 
+
+When hashing passwords using any function an adversary who learns the output of the hash function (or potentially any intermediate value, e.g., the output of
+\lstinline|hash_to_field|) may be able to carry out a dictionary attack.\cite{ecc.hashing}    
+
+
+%% TODO ide betenni a vegere a vegso kodbol  HKDF fuggvenyt.
+To mitigate such attacks, we first executed a more  costly key derivation function  (e.g., PBKDF2 [RFC8018], scrypt [RFC7914], or Argon2 [RFC9106])   on the password, then hashed the output of that function to the target \textit{BLS12-381} elliptic curve in accordance with \textit{Section 5.3.1.} of \cite{ecc.hashing} as can be followed within \textit{Snippet \ref{code.hkdf}}
+
+
+\begin{lstlisting}[language=java, caption={Hash Key Derivation Function used to mitigate dictionary attacks}, label=code.hkdf]
+	Code snippet here... about HKDF
+\end{lstlisting}
+
+% Simplified SWU
+\subsubsection{Simplified Shallue-van de Woestijne-Ulas Method}
+
+In case of hash-to-curve methods \textit{probabilistic rejection sampling} (also referred as "try-and-increment" or "hunt-and-peck") is not recommended, because they have been a perennial cause of side-channel vulnerabilities.\cite{ecc.hashing}.
+
+Hence  we use function \lstinline|map_to_curve_simple_swu(u)| and  the specific libraries from \textit{MIRACL} that implements a simplification of the Shallue-van de Woestijne-Ulas mapping. 
+Please refer to \textit{ Appendix Section } for specification and class descriptions from such libraries.
+
+Wahby and Boneh [WB19] showed how to adapt the Simplified SWU mapping to Weierstrass curves having $A == 0$ or $B == 0$. As a prerequisite this method requires to found such $E'$ by $ y'^2 = g'(x') = x'^3 + A' * x' + B'$ that is isogenous to $E$ and has $ A' != 0 $ and $B' != 0$. This isogeny defines a map $iso\_map(x', y')$ given by a pair of rational functions. $iso\_map$ takes as input a point on $E'$ and produces as output a point on $E$. Once $E'$ and $iso\_map$ are identified, this mapping works as follows: on input $u$, first apply the Simplified SWU mapping to get a point on $E'$, then apply the isogeny map to that point to get a point on $E$. In addition $iso\_map$ is a group homomorphism, meaning that point addition commutes with $iso\_map$. Thus, when using this mapping in the $hash\_to\_curve$ construction one can effect a small optimization by first mapping $u0$ and $u1$ to $E'$, adding the resulting points on $E'$, and then applying $iso\_map$ to the sum. This gives the same result while requiring only one evaluation of $iso\_map$.\cite{ecc.hashing}
+

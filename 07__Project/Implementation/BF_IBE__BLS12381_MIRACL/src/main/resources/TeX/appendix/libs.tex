@@ -1,0 +1,55 @@
+% Libraries for our implementation
+
+\section{Libraries for Pairing-based Cryptography}
+\label{sec:apx.libpbc}
+
+For our project we choosed to use \textit{Java} programming language,
+hence we considered libraries first whose functions can be called
+trough Java first. On the otherhand we also note that in case the overall
+performance is also a desired property of the BF-IBE system libraries from
+\textit{relic-toolkit}\cite{relic-toolkit} can be called trough wrappers.
+
+The \textit{Table \ref{tab:libpbc}} summarizes the supported \textit{BN} and \textit{BLS} curve security levels for the aforementioned libraries:
+
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{ |p{2cm}||p{3cm}|p{2cm}|p{1cm}|p{2cm}|p{1cm}|p{2cm}| }
+		\hline
+		\multicolumn{7}{|c|}{ \textbf{Supported security levels for MIRACL and RELIC libraries for BN and BLS curves} } \\
+		\hline
+		\textbf{Library}	& \textbf{Curve Type} & $\approx 128\mathrm{-bit}$ & $\approx$ & $\approx 192\mathrm{-bit}$ & $\approx$ & $\approx 256\mathrm{-bit}$ \\
+			\hline 
+
+RELIC & BLS12\_381 & X & & & & \\
+RELIC & BLS12\_446 & X & & & & \\
+RELIC & BLS12\_455 & X & & & & \\
+RELIC & BN382R    & X & & & & \\
+RELIC & BN446     & X & & & & \\
+RELIC & BLS12\_638 & & & X & & \\
+RELIC & BN638      & & & X & & \\
+RELIC & BLS24\_477 & & & & & X \\
+RELIC & BLS48\_575 & & & & & X \\
+
+\hline
+
+MIRACL & BLS12\_381 & X & & & & \\
+MIRACL & BLS12\_383 & X & & & & \\
+MIRACL & BLS12\_461 & X & & & & \\
+MIRACL & BN462      & X & & & & \\
+MIRACL & BN512I     & & & X & & \\
+MIRACL & BLS24\_479 & & & & & X \\
+MIRACL & BLS48\_556 & & & & & X \\
+MIRACL & BLS48\_581 & & & & & X \\				
+		\hline
+	\end{tabular}
+	\caption{ Overview of Identity-Based cryptographic construction families  \cite{theory.ec.ibeupdate}}
+	\label{tab:libpbc}
+\end{table}
+
+\subsection{MIRACL}
+% class methodusok 
+
+\subsubsection{SHA-256 Digest}
+For hashing purpose we used \textit{SHA-256}
+

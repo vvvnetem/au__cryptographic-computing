@@ -1,0 +1,68 @@
+% Appendix: Hash-to-curve parameters
+\section{Hash-to-curve parameters for curve BLS12-381}
+\label{sec:apx.hashtocurve}
+
+In \textit{Table \ref{tab:bls12381hashg1g2}} encoding type denotes either random oracle (\lstinline|hash_to_curve|) or nonuniform (\lstinline|encode_to_curve|).
+$E$ denotes the target elliptic curve over a field $\mathbb{F}$, $p$ the characteristic of the field $\mathbb{F}$, $m$ the extension degree of the field $\mathbb{F}$.
+
+$k$, the target security level of the suite in bits. $L$ the length parameter for \lstinline|hash_to_field|, \lstinline|expand_message| denotes one of the variants specified in Section 5.3 of \cite{ecc.hashing} plus any parameters required for the specified variant (for example, $H$, the underlying hash function).$f$, a mapping function. $h_{eff}$ is the scalar parameter for \lstinline|clear_cofactor|. In addition the mapping $f$ require additional parameters $Z$, $M$, \lstinline|rational_map|, $E'$, and \lstinline|iso_map|. \cite{ecc.hashing}
+
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{ |p{3cm}||p{6cm}|p{6cm}|  }
+		\hline
+		\multicolumn{3}{|c|}{ \textbf{BLS12-381 Curve parameter specification according to RFC9380} } \\
+		\hline
+		& BLS12381G1\_XMD:SHA-256\_SSWU\_RO\_ & BLS12381G2\_XMD:SHA-256\_SSWU\_RO\_ \\
+		\hline
+		encoding type	& \lstinline|hash_to_curve| & \lstinline|hash_to_curve| \\
+		$E$, elliptic curve	& $E: y^2=x^3 +4$ &  $E: y^2=x^3 +4 \cdot (1 + \mathcal{I})$ \\
+		$E'$, twisted curve equation & ${y'}^2 = {x'}^3+ A' \cdot x' + B'$ & ${y'}^2 = {x'}^3+ A' \cdot x' + B'$ \\
+		$A'$ for $E'$	& 
+		\makecell[l]{
+			\texttt{$0x144698a3b8e9433d693a02c9$}\\
+			\texttt{$6d4982b0ea985383ee66a8d8e8$}\\
+			\texttt{$981aefd881ac98936f8da0e0f9$}\\
+			\texttt{$7f5cf428082d584c1d$}
+		}\vspace{12pt}
+		& $240 \cdot \mathcal{I}$ \\
+		$B'$ for $E'$	& \makecell[l]{
+			\texttt{$0x12e2908d11688030018b12e8$}\\
+			\texttt{$753eee3b2016c1f0f24f4070a0$}\\
+			\texttt{$b9c14fcef35ef55a23215a316c$}\\
+			\texttt{$eaa5d1cc48e98e172be0$}
+		} & $1012 \cdot (1+\mathcal{I})$ \\
+		Base field $\mathbb{F}$ is $GF(p^m)$, where:		& & \\
+		$p$, prime	& \makecell[l]{
+			\texttt{$0x1a0111ea397fe69a4b1ba7b6434bacd7$}\\
+			\texttt{$64774b84f38512bf6730d2a0f6b0f624$}\\
+			\texttt{$1eabfffeb153ffffb9feffffffffaaab$}
+		} &\makecell[l]{
+			\texttt{$0x1a0111ea397fe69a4b1ba7b6434bacd7$}\\
+			\texttt{$64774b84f38512bf6730d2a0f6b0f624$}\\
+			\texttt{$1eabfffeb153ffffb9feffffffffaaab$}
+		} \\
+		$m$	& $1$ &  $2$ \\
+		$(1, \mathcal{I})$ is the basis for $\mathbb{F}$, where $\mathbb{I}^2 + 1 = 0$ in $\mathbb{F}$		& & \\
+		$k$ security parameter	& $128$ &  $128$ \\
+		expand message	& \lstinline|expand_message_xmd| & \lstinline|expand_message_xmd| \\
+		$H$, hash function	& $SHA-256$ & $SHA-256$ \\
+		$L$	& $64$ & $64$ \\		
+		$f$ & Simplified $SWU$ for $AB=0$  & Simplified $SWU$ for $AB=0$ \\
+		$Z$ & $11$  & $-(2 + \mathcal{I})$ \\
+		iso map, 11-isogeny map from $E'$ to $E$	& Appendix E.2 of \cite{ecc.hashing}  & Appendix E.3 of \cite{ecc.hashing} \\
+		$h_{eff}$, compatible with the fast cofactor clearing method described by Scott \cite{WB19} 	& \makecell[l]{
+			\texttt{$0xd201000000010001$}} & \makecell[l]{
+			\texttt{$0xbc69f08f2ee75b3584c6a0ea91b35288$} \\
+			\texttt{$8e2a8e9145ad7689986ff031508ffe13$} \\
+			\texttt{$29c2f178731db956d82bf015d1212b02$} \\
+			\texttt{$ec0ec69d7477c1ae954cbc06689f6a35$} \\
+			\texttt{$9894c0adebbf6b4e8020005aaa95551$}
+		}\vspace{12pt} \\
+		Simplified $SWU$ mapping to curve $E’$ isgenous to BLS12-318 	& Appendix F.2 of  \cite{ecc.hashing} &  Appendix F.2 of  \cite{ecc.hashing}\\
+		\hline
+	\end{tabular}
+	\caption{ Overview of Identity-Based cryptographic construction families  \cite{theory.ec.ibeupdate}}
+	\label{tab:bls12381hashg1g2}
+\end{table}
