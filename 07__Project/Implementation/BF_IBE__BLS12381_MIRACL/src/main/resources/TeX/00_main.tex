@@ -58,6 +58,8 @@
 \definecolor{mymauve}{rgb}{0.58,0,0.82}
 
 \lstset{ %
+	basicstyle=\small\ttfamily,
+	columns=flexible,
 	backgroundcolor=\color{white},   % choose the background color
 	basicstyle=\footnotesize,        % size of fonts used for the code
 	breaklines=true,                 % automatic line breaking only at whitespace
@@ -65,7 +67,7 @@
 	commentstyle=\color{mygreen},    % comment style
 	escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
 	keywordstyle=\color{blue},       % keyword style
-	stringstyle=\color{mymauve},     % string literal style
+	stringstyle=\color{mymauve}     % string literal style
 }
 
 \usepackage{orcidlink} % TODO: author@orcid <- orcid
@@ -107,7 +109,15 @@ Identity-Based Encryption from Boneh-Franklin scheme  with Optimized $r$-Ate Pai
 	%\include{report/sections/ibe2}
 	
 	
+	\newpage
+	\printbibliography
+
+	\newpage
+    % Appendix	
 	\appendix
+	
+	% Appendix: Results
+	\include{report/appendix/results}
 	
 	% Appendix: Transformation and deeper properties of pairings
 	\include{report/appendix/pairings}
@@ -116,15 +126,11 @@ Identity-Based Encryption from Boneh-Franklin scheme  with Optimized $r$-Ate Pai
 	\include{report/appendix/hashtocurve}
 	
 	% Appendix: libraries
-	\include{report/appendix/libs}
-	
-	
-    \newpage
-    \printbibliography
+	%\include{report/appendix/libs}
 
     % Glossaries, acronyms
-    \printglossary[type=\acronymtype]
+    %\printglossary[type=\acronymtype]
 
-    % Appendix
+
 
 \end{document}

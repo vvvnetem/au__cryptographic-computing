@@ -42,7 +42,7 @@ The literature calls such such curves \textit{supersingular} if $q$ divides $t$.
 is a dividant of the curve order: $r|n$. The $r$-torsion subgroup (denoted as $E(\mathbb{F}_{q^m}[r])$) is the set of points $P$ in which their order divides $r$.\cite{ecc.fam.param}
 
 
-\subsubsection{Choosing Type-3 elliptic curves over Type-1 curves}
+\subsubsection{Choosing Type-3 elliptic curves}
 \label{sec:apx.ecc.curves.pairing}
 
 In case of pairings ( $e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T $) there are some properties we can rely on.
@@ -223,14 +223,8 @@ The   \textit{Table \ref{tab:bls12381hashg1g2}}  within \textit{Appendix Section
 When hashing passwords using any function an adversary who learns the output of the hash function (or potentially any intermediate value, e.g., the output of
 \lstinline|hash_to_field|) may be able to carry out a dictionary attack.\cite{ecc.hashing}    
 
+To mitigate such attacks, we note that execution a more  costly key derivation function  (e.g., \textit{PBKDF2}, \textit{scrypt}, or \textit{Argon2})  on the password, then hashing the output of that function to the target \textit{BLS12-381} elliptic curve in accordance with \textit{Section 5.3.1.} of \cite{ecc.hashing} can be used as a further extension of our solution. \cite{ecc.hashing}
 
-%% TODO ide betenni a vegere a vegso kodbol  HKDF fuggvenyt.
-To mitigate such attacks, we first executed a more  costly key derivation function  (e.g., PBKDF2 [RFC8018], scrypt [RFC7914], or Argon2 [RFC9106])   on the password, then hashed the output of that function to the target \textit{BLS12-381} elliptic curve in accordance with \textit{Section 5.3.1.} of \cite{ecc.hashing} as can be followed within \textit{Snippet \ref{code.hkdf}}
-
-
-\begin{lstlisting}[language=java, caption={Hash Key Derivation Function used to mitigate dictionary attacks}, label=code.hkdf]
-	Code snippet here... about HKDF
-\end{lstlisting}
 
 % Simplified SWU
 \subsubsection{Simplified Shallue-van de Woestijne-Ulas Method}

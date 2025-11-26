@@ -22,15 +22,15 @@ On the otherhand the Decision Diffie-Hellman (noted as \textit{DDH} furthermore)
 For this reason the Boneh-Franklin IBE scheme builds upon the Computational Diffie-Hellmann assumption, also called \textit{Bilinear Diffie-Hellman Assumption} (noted as \textit{BDH} furthermore): Given our $\mathbb{G}_1, \mathbb{G}_2$ and $\hat{e}$ mapping and $\left< P, aP, bP, cP\right>$ for some $a,b,c \in \mathbb{Z}^*_q$ compute $W = \hat{e}(P,P)^{abc} \in \mathbb{G}_2$. Then an algorithm 
 $\mathcal{A}$ has advantage $\epsilon$ in solving \textit{BDH} for $\left< \mathbb{G}_1, \mathbb{G}_2 \right>$ if: 
 
-\begin{equation*}
+\begin{equation}
 	Pr \left[ \mathcal{A}(P, aP, bP, cP) = \hat{e}(P,P)^{abc} \right] \geq \epsilon
-\end{equation*}
+\end{equation}
 
 with probability where $a,b,c \in \mathbb{Z}^*_q$ and $P \in \mathbb{G}^*_1$ are random with random bits of $\mathcal{A}$.\cite{BF01}
 
 Previously we used $\mathcal{G}$ as \textit{BDH} generator within \textit{Section \ref{ssec:fullident}}, we give the full description of the assumption here based on \cite{BF01}: Having $\mathbb{G}$ be a \textit{BDH} parameter generator, than an $\mathcal{A}$ algorithm has advantage $\epsilon(k)$ in solving the $BDH$ problem for$\mathbb{G}$ for sufficient large $k$ \cite{BF01}: 
 
-\begin{equation*}
+\begin{equation}
 	\begin{aligned}
 		Adv_{\mathcal{G},\mathcal{A}}(k)
 		&= Pr\Big[
@@ -43,7 +43,7 @@ Previously we used $\mathcal{G}$ as \textit{BDH} generator within \textit{Sectio
 		\Big]
 		\;\ge\; \epsilon(k)
 	\end{aligned}
-\end{equation*}
+\end{equation}
 
 
  Consequently $\mathbb{G}$ satisfies the \textit{BDH} assumption for any randomized algorithm $\mathbb{A}$ has negligible advantage in $k$ for $Adv_{\mathbb{G}, \mathbb{A}}(k)$. In the following section we briefly review necessary background for pairing-based cryptography and how the aformentioned bilinear mapping can help us to choose the right elliptic curve family for our \textit{BF-IBE} implementation.
