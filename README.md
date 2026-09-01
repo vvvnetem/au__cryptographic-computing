@@ -1,6 +1,6 @@
 # Cryptographic Computing
 
-Repository for Cryptographic Computing Class (202526 FALL)
+Course materials for Cryptographic Computing at Aarhus University.
 
 ## Course Description
 
